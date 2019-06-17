@@ -25,11 +25,7 @@ public class Plateau
 		this.nbJoueur  = nbJoueur;
 		this.ensJoueur = new Joueur[nbJoueur];
 		this.selectionPlateau(this.nbJoueur));
-		if(nbJoueur == 2 || nbJoueur == 3 || nbJoueur == 4)
-		{	this.hauteurMax = this.largeurMax = 9; }
-		else
-		{ this.hauteurMax = this.largeurMax = 15; }
-		this.tabTuile = new Tuile[this.hauteurMax][this.largeurMax]
+
 	}
 
 	public int getNbJoueur()
@@ -44,44 +40,84 @@ public class Plateau
 
 	public int selectionPlateau(int nbJoueur)
 	{
+		return 0;
 	}
 
-	public void initPlateau()
+	public void initPlateau(int nbJoueur)
 	{
-		int nbCaseGauche = 3;
-		int nbCaseDroite = this.largeurMax-3;
-		//Initialisation du plateau à vide
+		int largeur;
+		try
+		{
+			FileReader fichier;
+			fichier = new FileReader( "Plateau/Plateau"+nbJoueur+".data");
+
+  		Scanner sc = new Scanner ( fichier );
+  		while ( sc.hasNext() )
+			{
+				while (sc.hasNext())
+				{
+					sc.next();
+					largeur++;
+					if(this.largeurMax < largeur ) this.largeurMax = largeur;
+				}
+				largeur = 0;
+				this.hauteurMax++
+			}
+  		fr.close();
+			sc.close();
+		}
+		catch (Exception e) { e.printStackTrace(); }
+		this.tabTuile = new Tuile[this.hauteurMax][this.largeurMax];
+		try
+		{
+			int hauteur;
+			int largeur;
+			Scanner sc = new Scanner ( fichier );
+			while(sc.hasNext())
+			{
+				while(sc.hasNext())
+				{
+					//Tuile vide
+					if (sc.next() == 'T') this.tabTuile[hauteur][largeur] = new Tuile("Vide", hauteur, largeur);
+					//Robot
+					if (sc.next() == '1') this.tabTuile[hauteur][largeur] = new Robot("Robot", hauteur, largeur, "Rouge");
+					if (sc.next() == '2') this.tabTuile[hauteur][largeur] = new Robot("Robot", hauteur, largeur, "Jaune");
+					if (sc.next() == '3') this.tabTuile[hauteur][largeur] = new Robot("Robot", hauteur, largeur, "Vert");
+					if (sc.next() == '4') this.tabTuile[hauteur][largeur] = new Robot("Robot", hauteur, largeur, "Bleu");
+					if (sc.next() == '5') this.tabTuile[hauteur][largeur] = new Robot("Robot", hauteur, largeur, "Violet");
+					if (sc.next() == '6') this.tabTuile[hauteur][largeur] = new Robot("Robot", hauteur, largeur, "Rose");
+					//Base
+					if (sc.next() == 'A') this.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "Rouge");
+					if (sc.next() == 'B') this.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "Jaune");
+					if (sc.next() == 'C') this.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "Vert");
+					if (sc.next() == 'D') this.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "Bleu");
+					if (sc.next() == 'E') this.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "Violet");
+					if (sc.next() == 'F') this.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "Rose");
+					//Cristaux
+					if (sc.next() == '*') this.tabTuile[hauteur][largeur] = new Gemme("Gemme", hauteur, largeur, "Vert");
+					if (sc.next() == '-') this.tabTuile[hauteur][largeur] = new Gemme("Gemme", hauteur, largeur, "Bleu");
+					if (sc.next() == '+') this.tabTuile[hauteur][largeur] = new Gemme("Gemme", hauteur, largeur, "Rose");
+					largeur++;
+				}
+				largeur = 0;
+				hauteur++;
+			}
+		}
+		catch(Exception e) { e.printStackTrace(); }
+	}
+
+	public String toString()
+	{
+		String chaine = "";
+
 		for(int i = 0; i < this.hauteurMax; i++)
 		{
 			for(int j = 0; j < this.largeurMax; j++)
 			{
-				this.tabTuile[i][j] = null;
+				chaine += this.tabTuile[i][j];
 			}
+			chaine += "\n";
 		}
-
-		for(int i = 0; i < this.largeurMax; i++)
-		{
-			for(j = nbCaseGauche; j < nbCaseDroite; j++)
-			{
-				this.tabTuile[i][j] = new Tuile();
-			}
-			nbCaseGauche = nbCaseGauche -1;
-			nbCaseDroite = nbCaseDroite +1;
-		}
-		for(int i = 0; i < this.largeurMax; i++)
-		{
-			this.tabTuile[this.hauteurMax/2][i] = new Tuile();
-		}
-		nbCaseGauche = 0;
-		nbCaseDroite = this.largeurMax;
-		for(int i = this.hauteurMax; i < this.hauteurMax; i++)
-		{
-			for(j = nbCaseGauche; j < nbCaseDroite ; j++)
-			{
-				this.tabTuile[i][j] = new Tuile();
-			}
-			nbCaseGauche = nbCaseGauche+1;
-			nbCaseDroite = nbCaseDroite-1;
-		}
+		return chaine;
 	}
 }
