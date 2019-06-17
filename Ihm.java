@@ -48,4 +48,45 @@ public class Ihm
 		System.out.println(plateau);
 		return plateau;
 	}
+
+	public void afficherChoix()
+	{
+
+		System.out.println( "Que voulez-vous faire :");
+		System.out.println();
+		System.out.println("C : Changer un programme");
+		System.out.println("P : Passer");
+
+		char choix = Clavier.lire_char(); 
+
+		switch (choix)
+		{
+			case 'C' : this.afficherAction(); break;
+			case 'P' : break;
+		}
+	}
+
+	public String afficherAction()
+	{
+		System.out.println("Quelle ordre voulez-vous donner ?");
+
+		System.out.println("M - Modifier une action"         );
+		System.out.println("E - Echanger deux actions"       );
+		System.out.println("A - Ajouter/remplacer une action");
+		System.out.println("R - Retirer une action"          );
+		System.out.println("V - Vider"                       );
+		System.out.println("P - Ne rien faire"               );
+
+		char action = Clavier.lire_char(); 
+
+		switch(action)
+		{
+			case 'M' : this.ctrl.getPlateau().getJoueurActif().modifierAction(); break;
+			case 'E' : this.ctrl.getPlateau().getJoueurActif().echangerAction(); break;
+			case 'A' : this.ctrl.getPlateau().getJoueurActif().ajouterAction (); break;
+			case 'R' : this.ctrl.getPlateau().getJoueurActif().retirerAction (); break;
+			case 'V' : this.ctrl.getPlateau().getJoueurActif().vider         (); break;
+			case 'P' : break;
+		}
+	}
 }
