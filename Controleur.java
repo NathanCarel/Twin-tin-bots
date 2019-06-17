@@ -4,7 +4,7 @@
 	17/06/2019
 */
 
-import java.util.*; 
+import java.util.*;
 import iut.algo.*;
 
 public class Controleur
@@ -15,35 +15,14 @@ public class Controleur
 	public Controleur()
 	{
 		Controleur.ihm      = new Ihm    (this);
-		Controleur.plateau  = new Plateau(this, Controleur.ihm.initNbJoueur());		
+		Controleur.plateau  = new Plateau(this, Controleur.ihm.initNbJoueur());
+
 	}
 
-	public String getPlateau2()
+	public String getPlateau()
 	{
-		return Controleur.plateau.getPlateau2();
+		return Controleur.plateau.getPlateau();
 	}
-
-	public String getPlateau3()
-	{
-		return Controleur.plateau.getPlateau3();
-	}
-
-	public String getPlateau4()
-	{
-		return Controleur.plateau.getPlateau4();
-	}
-
-	public String getPlateau5()
-	{
-		return Controleur.plateau.getPlateau5();
-	}
-
-	public String getPlateau6()
-	{
-		return Controleur.plateau.getPlateau6();
-	}
-
-
 
 	public static void main(String[] args)
 	{
