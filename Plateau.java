@@ -12,11 +12,15 @@ public class Plateau
 	private Controleur ctrl;
 	private int        nbJoueur;
 	private int        nbCristaux;
+	private Joueur[]   ensJoueur;
+
 
 	public Plateau(Controleur ctrl, int nbJoueur)
 	{
-		this.ctrl     = ctrl;
-		this.nbJoueur = nbJoueur;
+		this.ctrl      = ctrl;
+		this.nbJoueur  = nbJoueur;
+		this.ensJoueur = new Joueur[nbJoueur];
+
 	}
 
 	public String getPlateau2()
