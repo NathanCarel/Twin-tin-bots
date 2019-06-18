@@ -65,6 +65,7 @@ public class Ihm
 		System.out.println("P : Passer");
 
 		char choix = Clavier.lire_char();
+		choix.toUpperCase();
 
 		switch (choix)
 		{
@@ -86,6 +87,8 @@ public class Ihm
 		System.out.println("P - Ne rien faire"                );
 
 		char action = Clavier.lire_char();
+				action.toUpperCase();
+
 
 		switch(action)
 		{
