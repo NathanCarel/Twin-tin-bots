@@ -6,6 +6,7 @@
 
 import java.util.*;
 import iut.algo.*;
+import java.io.*;
 
 public class Plateau
 {
@@ -24,7 +25,7 @@ public class Plateau
 		this.ctrl      = ctrl;
 		this.nbJoueur  = nbJoueur;
 		this.ensJoueur = new Joueur[nbJoueur];
-		this.selectionPlateau(this.nbJoueur));
+		this.selectionPlateau(this.nbJoueur);
 
 	}
 
@@ -61,7 +62,7 @@ public class Plateau
 					if(this.largeurMax < largeur ) this.largeurMax = largeur;
 				}
 				largeur = 0;
-				this.hauteurMax++
+				this.hauteurMax++;
 			}
   		fr.close();
 			sc.close();
