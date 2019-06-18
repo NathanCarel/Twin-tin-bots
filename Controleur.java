@@ -1,5 +1,4 @@
 /*
-
 import iut.algo.*;
 import java.util.*;
 import javax.sound.sampled.Control;
@@ -27,6 +26,16 @@ public class Controleur
 		return Controleur.plateau;
 	}
 
+	public void getDessin(Tuile[][] tabTuiles)
+	{
+		 Controleur.ihm.getDessin(tabTuiles);
+	}
+
+	public String getElement()
+	{
+		return Controleur.plateau.getElement();
+	}
+
 	public int initNbJoueur()
 	{
 		return Controleur.ihm.initNbJoueur();
@@ -35,16 +44,6 @@ public class Controleur
 	public int premierJoueur(Joueur[] ensJoueurs)
 	{
 		return Controleur.ihm.premierJoueur(ensJoueurs);
-	}
-
-	public String getDessin()
-	{
-		return Controleur.ihm.getDessin();
-	}
-
-	public String getElement()
-	{
-		return Controleur.plateau.getElement();
 	}
 
 	public static void main(String[] args)

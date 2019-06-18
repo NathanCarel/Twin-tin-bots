@@ -25,7 +25,7 @@ public class Ihm
 
 		while(nbJoueur <= 1 || nbJoueur >= 7 )
 		{
-			System.out.println("Le nombre de joueurs doit être compris entre 2 et 6");
+			System.out.println("Le nombre de joueurs doit �tre compris entre 2 et 6");
 
 			nbJoueur = Clavier.lire_int();
 		}
@@ -65,7 +65,6 @@ public class Ihm
 		System.out.println("P : Passer");
 
 		char choix = Clavier.lire_char();
-		//choix.toUpperCase();
 
 		switch (choix)
 		{
@@ -87,8 +86,6 @@ public class Ihm
 		System.out.println("P - Ne rien faire"                );
 
 		char action = Clavier.lire_char();
-		//action.toUpperCase();
-
 
 		switch(action)
 		{
@@ -104,7 +101,7 @@ public class Ihm
 	public void afficherNbAction()
 	{
 		System.out.println();
-		System.out.println("Quelle action voulez-vous modifier ?"); 
+		System.out.println("Quelle action voulez-vous modifier ?");
 		System.out.println("[1]  : La premiere" );
 		System.out.println("[2]  : La seconde"  );
 		System.out.println("[3]  : La troisieme");
@@ -121,42 +118,44 @@ public class Ihm
 		}
 	}
 
-	public String getDessin()
+	public void getDessin(Tuile[][] tabTuiles)
 	{
 		String chaine = "";
 
-		int cptLig = 0;
-		while ( cptLig < 10 )  
-		{                                  
-				int cptCol = 0;
-				while ( cptCol < 10 )
-				{
-					chaine = chaine + ("+---");
-					cptCol++;
-				}
-
-				chaine = chaine + ("+ \n");
-
-				cptCol = 0;
-				while ( cptCol < 10 )
-				{
-					chaine = chaine + ("| " + this.ctrl.getElement() + " ");
-					cptCol++;
-				}
-
-				chaine = chaine + ("|");
-				chaine = chaine + "\n" ;
-				cptLig++;
-			}
-
-			int cptCol = 0;
-			while (cptCol < 10 )
+		for(int i = 0; i < tabTuiles.length; i++)
+		{
+			boolean test = true;
+			for(int j = 0; j < tabTuiles[i].length; j++)
 			{
-				chaine = chaine + ("+---");
-				cptCol++;
-			}
+				if (i<=tabTuiles.length/2){
+					if(j>1 && tabTuiles[i][j-1] != null && tabTuiles[i][j] == null  ) { chaine += "+\n"; test=false;}
+					if(test && j+1>=tabTuiles[i].length){ chaine += "+\n"; test=false;}
+					if (test)
+						if (tabTuiles[i][j] != null)
+							chaine += "+---";
+						else chaine += "    ";
+				}
+				if (i>tabTuiles.length/2){
+					if(j>1 && tabTuiles[i-1][j-1] != null && tabTuiles[i-1][j] == null  ) { chaine += "+\n"; test=false;}
+					if(test && i>2 && j+1>=tabTuiles[i-1].length){ chaine += "+\n"; test=false;}
+					if (test)
+						if (i>2 && tabTuiles[i-1][j] != null)
+							chaine += "+---";
+						else chaine += "    ";
+				}
+		}
 
-			chaine = chaine + ("+");	
-			return chaine;
+			for(int j = 0; j < tabTuiles[i].length; j++)
+			{
+				if(tabTuiles[i][j] == null) { chaine += "    ";                       }
+				else                        { chaine += "| " + tabTuiles[i][j] + " "; }
+				if(j-1 > 0 && j+1 < tabTuiles[i].length)
+					if(tabTuiles[i][j-1] != null && tabTuiles[i][j+1] == null) { chaine += "|"; break;}
+			}
+			chaine += "\n";
+		}
+		for(int k = 0; k < tabTuiles[tabTuiles.length-1].length; k++) {chaine += "+---";}
+		chaine += "+\n";
+		System.out.println(chaine);
 	}
 }

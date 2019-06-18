@@ -37,7 +37,7 @@ public class Plateau
 
 	public void jouer()
 	{
-		this.toString();
+		this.ctrl.getDessin(this.tabTuile);
 	}
 
 	public int getNbJoueur()
@@ -84,7 +84,7 @@ public class Plateau
 				ligne = sc.nextLine();
 				for(int i = 0; i < ligne.length(); i++)
 				{
-					largeur++;
+					if(ligne.charAt(i) == ':') { largeur++; }
 				}
 				if(this.largeurMax < largeur ) this.largeurMax = largeur;
 				largeur = 0;
@@ -105,6 +105,7 @@ public class Plateau
 			{
 				ligne = sc.nextLine();
 				composant = ligne.split(":");
+				System.out.println(composant.length);
 				for(int i = 0; i < composant.length; i++)
 				{
 					composant[i].substring(1,2);
@@ -142,6 +143,25 @@ public class Plateau
 			this.ensJoueur[i].attributionRobot(this.ensRobot.get(i).getCouleur(), this.ensRobot.get(i));
 		}
 	}
+
+	public String getElement()
+	{
+		String chaine = "";
+
+		for(int i = 0; i < this.hauteurMax; i++)
+		{
+			for(int j = 0; j < this.largeurMax; j++)
+			{
+				if(this.tabTuile[i][j] == null) { chaine += " "; }
+				else
+				{
+					chaine += this.tabTuile[i][j];
+				}
+			}
+		}
+		return chaine;
+	}
+
 
 	public String toString()
 	{

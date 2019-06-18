@@ -1,6 +1,6 @@
 public class Joueur
 {
-  private static String[] tabCouleurs = new String[] {"Rouge", "Jaune", "Vert", "Bleu", "Violet", "Rose"};
+  private static String[] tabCouleurs = new String[] {"Rouge", "Jaune", "Vert", "Bleu", "Mauve", "Cyan"};
   private static int nbJoueurs;
 
   private Robot robot1;

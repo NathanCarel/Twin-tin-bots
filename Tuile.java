@@ -18,7 +18,7 @@ public class Tuile
     {
         String chaine = "";
 
-        chaine += "T";
+        chaine += " ";
 
         return chaine;
     }
