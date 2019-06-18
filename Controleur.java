@@ -41,6 +41,7 @@ public class Controleur
 	{
 		new Controleur();
 		Controleur.ihm.afficherPlateau(Controleur.plateau.getNbJoueur());
+		Controleur.ihm.afficherChoix();
 	}
 
 	// public String getNomJoueur()

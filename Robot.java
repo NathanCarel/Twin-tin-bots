@@ -1,8 +1,9 @@
 public class Robot extends Tuile
 {
-    private static char[] tabDir = {'N','E','S','O'};
-    private        String couleur;
-    private        char   dir;
+    private static char[]   tabDir = {'N','E','S','O'};
+    private        String   couleur;
+    private        char     dir;
+    private        Ordre[]  ensOrdre;
 
     public Robot(String type, int x, int y, String couleur)
     {
@@ -14,7 +15,7 @@ public class Robot extends Tuile
     public String getCouleur() { return this.couleur; }
 
 
-    public void modifierAction()
+    public void modifierAction(int numAction)
 	{
 
 	}
