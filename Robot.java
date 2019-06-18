@@ -1,11 +1,14 @@
 public class Robot extends Tuile
 {
-    private String couleur;
+    private static char[] tabDir = {'N','E','S','O'};
+    private        String couleur;
+    private        char   dir;
 
     public Robot(String type, int x, int y, String couleur)
     {
         super(type, x, y);
         this.couleur = couleur;
+
     }
 
     public String getCouleur() { return this.couleur; }
@@ -13,27 +16,27 @@ public class Robot extends Tuile
 
     public void modifierAction()
 	{
-		
+
 	}
 
 	public void echangerAction()
 	{
-		
+
 	}
 
 	public void ajouterAction()
 	{
-		
+
 	}
 
 	public void retirerAction()
 	{
-		
+
 	}
 
 	public void vider()
 	{
-		
+
 	}
 
 	public String toString()

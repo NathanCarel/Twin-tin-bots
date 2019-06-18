@@ -1,10 +1,13 @@
 /*
+
+import iut.algo.*;
+import java.util.*;
+import javax.sound.sampled.Control;
 	Projet_tut
 	@author Tristan Bassa
 	17/06/2019
 */
 
-import java.util.*;
 import iut.algo.*;
 
 public class Controleur
@@ -19,9 +22,19 @@ public class Controleur
 
 	}
 
-	public String getPlateau()
+	public Plateau getPlateau()
 	{
-		return Controleur.plateau.getPlateau();
+		return Controleur.plateau;
+	}
+
+	public int initNbJoueur()
+	{
+		return Controleur.ihm.initNbJoueur();
+	}
+
+	public int premierJoueur(Joueur[] ensJoueurs)
+	{
+		return Controleur.ihm.premierJoueur(ensJoueurs);
 	}
 
 	public static void main(String[] args)
