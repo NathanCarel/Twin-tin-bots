@@ -13,8 +13,8 @@ public class Ihm
 
 	public Ihm(Controleur ctrl)
 	{
-		this.ctrl = ctrl; 
-		
+		this.ctrl = ctrl;
+
 	}
 
 	public int initNbJoueur()
@@ -27,25 +27,32 @@ public class Ihm
 		{
 			System.out.println("Le nombre de joueurs doit être compris entre 2 et 6");
 
-			nbJoueur = Clavier.lire_int(); 
+			nbJoueur = Clavier.lire_int();
 		}
-
 		return nbJoueur;
+	}
+
+	public int premierJoueur(Joueur[] ensJoueur)
+	{
+		int joueur = 0;
+
+		do
+		{
+			System.out.println("Quel est le joueur qui commence : ");
+			for(int i = 0; i < ensJoueur.length; i++)
+			{
+				System.out.println("["+i+"] " + ensJoueur[i].getCouleur());
+			}
+			joueur = Clavier.lire_int();
+		}while(joueur < 0 || joueur > ensJoueur.length);
+
+		return joueur;
 	}
 
 	public String afficherPlateau(int nbJoueur)
 	{
 		String plateau = "";
-
-		switch(nbJoueur)
-		{
-			case 2 : plateau = this.ctrl.getPlateau2(); break;
-			case 3 : plateau = this.ctrl.getPlateau3(); break;
-			case 4 : plateau = this.ctrl.getPlateau4(); break;
-			case 5 : plateau = this.ctrl.getPlateau5(); break;
-			case 6 : plateau = this.ctrl.getPlateau6(); break;
-		}
-		System.out.println(plateau);
+		System.out.println(this.ctrl.getPlateau());
 		return plateau;
 	}
 
@@ -57,7 +64,7 @@ public class Ihm
 		System.out.println("C : Changer un programme");
 		System.out.println("P : Passer");
 
-		char choix = Clavier.lire_char(); 
+		char choix = Clavier.lire_char();
 
 		switch (choix)
 		{
@@ -66,7 +73,7 @@ public class Ihm
 		}
 	}
 
-	public String afficherAction()
+	public void afficherAction()
 	{
 		System.out.println("Quelle ordre voulez-vous donner ?");
 
@@ -77,15 +84,15 @@ public class Ihm
 		System.out.println("V - Vider"                       );
 		System.out.println("P - Ne rien faire"               );
 
-		char action = Clavier.lire_char(); 
+		char action = Clavier.lire_char();
 
 		switch(action)
 		{
-			case 'M' : this.ctrl.getPlateau().getJoueurActif().modifierAction(); break;
-			case 'E' : this.ctrl.getPlateau().getJoueurActif().echangerAction(); break;
-			case 'A' : this.ctrl.getPlateau().getJoueurActif().ajouterAction (); break;
-			case 'R' : this.ctrl.getPlateau().getJoueurActif().retirerAction (); break;
-			case 'V' : this.ctrl.getPlateau().getJoueurActif().vider         (); break;
+			case 'M' : this.ctrl.getPlateau().getJoueurActif().getRobot1().modifierAction(); break;
+			case 'E' : this.ctrl.getPlateau().getJoueurActif().getRobot1().echangerAction(); break;
+			case 'A' : this.ctrl.getPlateau().getJoueurActif().getRobot1().ajouterAction (); break;
+			case 'R' : this.ctrl.getPlateau().getJoueurActif().getRobot1().retirerAction (); break;
+			case 'V' : this.ctrl.getPlateau().getJoueurActif().getRobot1().vider         (); break;
 			case 'P' : break;
 		}
 	}

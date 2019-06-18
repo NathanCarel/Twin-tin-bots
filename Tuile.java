@@ -16,7 +16,7 @@ public class Tuile
     public int    getPosY () { return this.posY; }
     public String toString()
     {
-        String chaine =""
+        String chaine = "";
 
         chaine += "T";
 
