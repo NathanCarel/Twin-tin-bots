@@ -37,7 +37,7 @@ public class Plateau
 
 	public void jouer()
 	{
-		this.toString();
+		this.ctrl.getDessin();
 	}
 
 	public int getNbJoueur()
@@ -77,7 +77,7 @@ public class Plateau
 
 		try
 		{
-			fichier = new FileReader( "./Plateau/Plateau"+nbJoueur+".data");
+			fichier = new FileReader( "./Plateau/Plateau" + nbJoueur + ".data");
 			Scanner sc = new Scanner ( fichier );
 			while ( sc.hasNext() )
 			{
@@ -117,16 +117,16 @@ public class Plateau
 					if (composant[i] == " M") this.ensRobot.add((Robot)(this.tabTuile[hauteur][largeur] = new Robot("Robot", hauteur, largeur, "Mauve")));
 					if (composant[i] == " S") this.ensRobot.add((Robot)(this.tabTuile[hauteur][largeur] = new Robot("Robot", hauteur, largeur, "Saumon")));
 					//Base
-					if (composant[i] == " 1 ") this.ensBase.add((Base)(this.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "Rouge")));
-					if (composant[i] == " 2 ") this.ensBase.add((Base)(this.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "Jaune")));
-					if (composant[i] == " 3 ") this.ensBase.add((Base)(this.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "Vert")));
-					if (composant[i] == " 4 ") this.ensBase.add((Base)(this.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "Bleu")));
-					if (composant[i] == " 5 ") this.ensBase.add((Base)(this.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "Mauve")));
-					if (composant[i] == " 6 ") this.ensBase.add((Base)(this.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "Saumon")));
+					if (composant[i] == " 1") this.ensBase.add((Base)(this.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "Rouge")));
+					if (composant[i] == " 2") this.ensBase.add((Base)(this.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "Jaune")));
+					if (composant[i] == " 3") this.ensBase.add((Base)(this.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "Vert")));
+					if (composant[i] == " 4") this.ensBase.add((Base)(this.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "Bleu")));
+					if (composant[i] == " 5") this.ensBase.add((Base)(this.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "Mauve")));
+					if (composant[i] == " 6") this.ensBase.add((Base)(this.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "Saumon")));
 					//Cristaux
-					if (composant[i] == " * ") this.tabTuile[hauteur][largeur] = new Gemme("Gemme", hauteur, largeur, "Vert");
-					if (composant[i] == " - ") this.tabTuile[hauteur][largeur] = new Gemme("Gemme", hauteur, largeur, "Bleu");
-					if (composant[i] == " + ") this.tabTuile[hauteur][largeur] = new Gemme("Gemme", hauteur, largeur, "Saumon");
+					if (composant[i] == " *") this.tabTuile[hauteur][largeur] = new Gemme("Gemme", hauteur, largeur, "Vert");
+					if (composant[i] == " -") this.tabTuile[hauteur][largeur] = new Gemme("Gemme", hauteur, largeur, "Bleu");
+					if (composant[i] == " +") this.tabTuile[hauteur][largeur] = new Gemme("Gemme", hauteur, largeur, "Saumon");
 					largeur++;
 				}
 				largeur = 0;
@@ -140,6 +140,24 @@ public class Plateau
 		{
 			this.ensJoueur[i].attributionRobot(this.ensRobot.get(i).getCouleur(), this.ensRobot.get(i));
 		}
+	}
+
+	public String getElement()
+	{
+		String chaine = "";
+
+		for(int i = 0; i < this.hauteurMax; i++)
+		{
+			for(int j = 0; j < this.largeurMax; j++)
+			{
+				if(this.tabTuile[i][j] == null) { return " "; }
+				else
+				{
+					chaine += this.tabTuile[i][j]; 
+				}
+			}
+		}
+		return chaine;				
 	}
 
 	public String toString()

@@ -65,7 +65,7 @@ public class Ihm
 		System.out.println("P : Passer");
 
 		char choix = Clavier.lire_char();
-		choix.toUpperCase();
+		//choix.toUpperCase();
 
 		switch (choix)
 		{
@@ -87,7 +87,7 @@ public class Ihm
 		System.out.println("P - Ne rien faire"                );
 
 		char action = Clavier.lire_char();
-				action.toUpperCase();
+		//action.toUpperCase();
 
 
 		switch(action)
@@ -119,5 +119,44 @@ public class Ihm
 			case 3  : this.ctrl.getPlateau().getJoueurActif().getRobot1().modifierAction(3); break;
 			case 10 : break;
 		}
+	}
+
+	public String getDessin()
+	{
+		String chaine = "";
+
+		int cptLig = 0;
+		while ( cptLig < 10 )  
+		{                                  
+				int cptCol = 0;
+				while ( cptCol < 10 )
+				{
+					chaine = chaine + ("+---");
+					cptCol++;
+				}
+
+				chaine = chaine + ("+ \n");
+
+				cptCol = 0;
+				while ( cptCol < 10 )
+				{
+					chaine = chaine + ("| " + this.ctrl.getElement() + " ");
+					cptCol++;
+				}
+
+				chaine = chaine + ("|");
+				chaine = chaine + "\n" ;
+				cptLig++;
+			}
+
+			int cptCol = 0;
+			while (cptCol < 10 )
+			{
+				chaine = chaine + ("+---");
+				cptCol++;
+			}
+
+			chaine = chaine + ("+");	
+			return chaine;
 	}
 }

@@ -37,6 +37,16 @@ public class Controleur
 		return Controleur.ihm.premierJoueur(ensJoueurs);
 	}
 
+	public String getDessin()
+	{
+		return Controleur.ihm.getDessin();
+	}
+
+	public String getElement()
+	{
+		return Controleur.plateau.getElement();
+	}
+
 	public static void main(String[] args)
 	{
 		new Controleur();
