@@ -105,7 +105,6 @@ public class Plateau
 			{
 				ligne = sc.nextLine();
 				composant = ligne.split(":");
-				System.out.println(composant.length);
 				for(int i = 0; i < composant.length; i++)
 				{
 					composant[i].substring(1,2);

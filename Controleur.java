@@ -42,6 +42,7 @@ public class Controleur
 	}
 
 	public int premierJoueur(Joueur[] ensJoueurs)
+
 	{
 		return Controleur.ihm.premierJoueur(ensJoueurs);
 	}
@@ -49,7 +50,7 @@ public class Controleur
 	public static void main(String[] args)
 	{
 		new Controleur();
-		Controleur.ihm.afficherPlateau(Controleur.plateau.getNbJoueur());
+		//Controleur.ihm.afficherPlateau(Controleur.plateau.getNbJoueur());
 		Controleur.ihm.afficherChoix();
 	}
 
