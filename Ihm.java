@@ -58,6 +58,24 @@ public class Ihm
 
 	public void afficherChoix() //Modifié
 	{
+		Joueur jActuel = this.ctrl.getPlateau().getJoueurActif();
+
+        System.out.println("Robots " + jActuel.getCouleur());
+        
+        for (int r=1; r<3; r++)
+        {
+            System.out.print("[ ");
+            for (int o=0; o<3; o++)
+            {
+                System.out.print("(");
+
+                System.out.print(jActuel.getRobot(r).getOrdre(o));
+
+                System.out.print(")");
+            }
+
+            System.out.print(" ] ");
+        }
 
 		System.out.println( "\nJoueur " + this.ctrl.getPlateau().getJoueurActif().getCouleur() + " que voulez-vous faire :");
 		System.out.println();
@@ -91,48 +109,67 @@ public class Ihm
 		char action = Clavier.lire_char();
 		//action.toUpperCase();
 
-		System.out.println("\nChoisissez un ordre:");
-
-		for (int i=0; i<8; i++)
-			System.out.println(i+1 + " - " + this.ctrl.getPlateau().getJoueurActif().getOrdre(i).getType() + " (" + this.ctrl.getPlateau().getJoueurActif().getOrdre(i).getNbExemplaires() + ") "); //Affiche tous les ordres
-
 		int numOrdre      = 0;
 		int positionOrdre = 0;
 
-		do
+		if (action != 'P')
 		{
-			numOrdre = Clavier.lire_int()-1;
-		}
-		while (numOrdre < 0 || numOrdre > 7);
+			System.out.println("\nQuelle action voulez-vous modifier ?"); 
+			System.out.println("[1]  : La premiere  : " + robot.getOrdre(0)/*.getType()*/);
+			System.out.println("[2]  : La seconde   : " + robot.getOrdre(1)/*.getType()*/);
+			System.out.println("[3]  : La troisieme : " + robot.getOrdre(2)/*.getType()*/);
+			System.out.println("[4]  : Annuler"     );	
 
-		Ordre ordre = Ordre.values()[numOrdre];
-
-
-		System.out.println("\nQuelle action voulez-vous modifier ?"); 
-		System.out.println("[1]  : La premiere  : " + robot.getOrdre(0)/*.getType()*/);
-		System.out.println("[2]  : La seconde   : " + robot.getOrdre(1)/*.getType()*/);
-		System.out.println("[3]  : La troisieme : " + robot.getOrdre(2)/*.getType()*/);
-		System.out.println("[4]  : Annuler"     );
-
-		do
-		{
-			positionOrdre = Clavier.lire_int()-1;
-		}
-		while (positionOrdre < 0 || positionOrdre > 3);
+			do
+			{
+				positionOrdre = Clavier.lire_int()-1;
+			}
+			while (positionOrdre < 0 || positionOrdre > 3);
 
 
-		switch(action)
-		{
-			case 'A' : robot.setOrdre(ordre, numOrdre); 
-			           /*this.ctrl.getPlateau().getJoueurActif().getOrdre(); */break;
-			case 'E' : //robot.setOrdre(); 
+			switch(action)
+			{
+				case 'A' :  System.out.println("\nChoisissez un ordre:");
 
+							for (int i=0; i<8; i++)
+							System.out.println(String.format("%-23s",i+1 + " - " + this.ctrl.getPlateau().getJoueurActif().getOrdre(i).getType()) +  " (" + this.ctrl.getPlateau().getJoueurActif().getOrdre(i).getNbExemplaires() + ") "); //Affiche tous les ordres
 
-			           break;
-			case 'R' : robot.setOrdre(null, numOrdre); break;
-			case 'V' : for (int i=0; i<3; i++)
-			              robot.setOrdre(null, i); break;
-			case 'P' : break;
+							do
+							{
+								numOrdre = Clavier.lire_int()-1;
+							}
+							while (numOrdre < 0 || numOrdre > 7);
+
+							Ordre ordre = Ordre.values()[numOrdre];
+
+						    if(this.ctrl.getPlateau().getJoueurActif().getOrdre(positionOrdre) == null)
+						    {
+						    	robot.setOrdre(ordre, positionOrdre);
+						     	this.ctrl.getPlateau().getJoueurActif().getOrdre(positionOrdre).getNbExemplairesMoinsUn();
+						    }
+						    else
+						    {
+						    	this.ctrl.getPlateau().getJoueurActif().getOrdre(positionOrdre).getNbExemplairesPlusUn();
+						    	robot.setOrdre(ordre, positionOrdre);
+						    	this.ctrl.getPlateau().getJoueurActif().getOrdre(positionOrdre).getNbExemplairesMoinsUn();
+						    }
+
+						    break;
+				case 'E' :  int ordre1 = 0; int ordre2 = 0;
+						    System.out.println("Quels sont les ordres que vous voulez échanger ?");
+						    ordre1 = Clavier.lire_int();
+						    ordre2 = Clavier.lire_int();
+						    robot.echangerOrdre(ordre1, ordre2);break;
+	 
+				case 'R' :  robot.setOrdre(null, numOrdre);
+						    this.ctrl.getPlateau().getJoueurActif().getOrdre(positionOrdre).getNbExemplairesMoinsUn();
+						    break;
+
+				case 'V' : for (int i=0; i<3; i++)
+				              robot.setOrdre(null, i);break;
+
+				case 'P' : break;
+			}
 		}
 	}
 

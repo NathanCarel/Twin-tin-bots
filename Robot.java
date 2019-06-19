@@ -34,6 +34,15 @@ public class Robot extends Tuile
   public Ordre getOrdre(int i)                   { return this.tabOrdre[i];       }
   public Ordre[] getTabOrdre()                   { return this.tabOrdre;          }
 
+  public void echangerOrdre(int indice1, int indice2)
+  {
+    Ordre tmp;
+
+    tmp = this.tabOrdre[indice1];
+    this.tabOrdre[indice1] = this.tabOrdre[indice2];
+    this.tabOrdre[indice2] = tmp;
+
+  }
 
   public void avancer(int nbCases)
   {
@@ -151,13 +160,13 @@ public class Robot extends Tuile
 
   public String toString()
   {
-    if( this.couleur.equals("Rouge" )){return "\033[0;31m"+this.orientationAffichage+"\033[0m";}
-    if( this.couleur.equals("Jaune" )){return "\033[0;33m"+this.orientationAffichage+"\033[0m";}
-    if( this.couleur.equals("Vert"  )){return "\033[0;32m"+this.orientationAffichage+"\033[0m";}
-    if( this.couleur.equals("Bleu"  )){return "\033[0;34m"+this.orientationAffichage+"\033[0m";}
-    if( this.couleur.equals("Violet")){return "\033[0;35m"+this.orientationAffichage+"\033[0m";}
-    if( this.couleur.equals("Cyan"  )){return "\033[0;36m"+this.orientationAffichage+"\033[0m";}
+    // if( this.couleur.equals("Rouge" )){return "\033[0;31m"+this.orientationAffichage+"\033[0m";}
+    // if( this.couleur.equals("Jaune" )){return "\033[0;33m"+this.orientationAffichage+"\033[0m";}
+    // if( this.couleur.equals("Vert"  )){return "\033[0;32m"+this.orientationAffichage+"\033[0m";}
+    // if( this.couleur.equals("Bleu"  )){return "\033[0;34m"+this.orientationAffichage+"\033[0m";}
+    // if( this.couleur.equals("Violet")){return "\033[0;35m"+this.orientationAffichage+"\033[0m";}
+    // if( this.couleur.equals("Cyan"  )){return "\033[0;36m"+this.orientationAffichage+"\033[0m";}
 
-    return "";
+    return "" + this.orientationAffichage;
   }
 }

@@ -27,4 +27,12 @@ public enum Ordre
     {
     	return this.nbExemplaires;
     }
+
+    public int getNbExemplairesMoinsUn() { return this.nbExemplaires--; }
+    public int getNbExemplairesPlusUn()  { return this.nbExemplaires++; }
+
+    public String toString()
+    {
+        return this.type;
+    }
 }
