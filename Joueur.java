@@ -3,8 +3,8 @@ public class Joueur
   private static String[] tabCouleurs = new String[] {"Rouge", "Jaune", "Vert", "Bleu", "Violet", "Rose"};
   private static int nbJoueurs;
 
-  private Robot robot1;
-  private Robot robot2;
+  private Robot robot1 = new Robot("null", 0, 0, "null", 'a');
+  private Robot robot2 = new Robot("null", 0, 0, "null", 'a');
   private int   nbPoints;
   private Base  base;
   private Ordre[] stockOrdre;
@@ -21,7 +21,7 @@ public class Joueur
     this.couleur = Joueur.tabCouleurs[Joueur.nbJoueurs++];
   }
 
-  public Robot  getRobot(int i) { if (i == 1) return this.robot1; else return this.robot2; }
+  public Robot  getRobot(int i) { if (i == 1) return this.robot1; if (i == 2) return this.robot2; return null;}
   public int    getNbPoints()   { return this.nbPoints;      }
   public Base   getBase()       { return this.base;          }
   public Ordre  getOrdre(int i) { return this.stockOrdre[i]; }
@@ -33,7 +33,10 @@ public class Joueur
   {
     if(couleur.equals(this.couleur))
     {
-      this.robot1 = robot;
+      if (this.robot1.getType().equals("null"))
+        this.robot1 = robot;
+      else
+        this.robot2 = robot;
     }
   }
 
