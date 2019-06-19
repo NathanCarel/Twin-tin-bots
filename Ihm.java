@@ -1,4 +1,3 @@
-
 /*
 	Projet_tut
 	@author Tristan Bassa
@@ -15,7 +14,6 @@ public class Ihm
 	public Ihm(Controleur ctrl)
 	{
 		this.ctrl = ctrl;
-
 	}
 
 	public int initNbJoueur()
@@ -24,9 +22,9 @@ public class Ihm
 
 		int nbJoueur = Clavier.lire_int();
 
-		while (nbJoueur <= 1 || nbJoueur >= 7) {
+		while (nbJoueur <= 1 || nbJoueur >= 7)
+		{
 			System.out.println("Le nombre de joueurs doit etre compris entre 2 et 6");
-
 			nbJoueur = Clavier.lire_int();
 		}
 		return nbJoueur;
@@ -48,12 +46,6 @@ public class Ihm
 		return joueur;
 	}
 
-	public String afficherPlateau(int nbJoueur)
-	{
-		String plateau = "";
-		System.out.println(this.ctrl.getPlateau());
-		return plateau;
-	}
 
 	public void afficherChoix() {
 
@@ -64,19 +56,16 @@ public class Ihm
 
 		char choix = Clavier.lire_char();
 
-		switch (choix) {
-		case 'C':
-			this.afficherAction();
-			break;
-		case 'P':
-			break;
+		switch (choix)
+		{
+			case 'C': this.afficherAction(); break;
+		  case 'P': break;
 		}
 	}
 
 	public void afficherAction()
 	{
-		System.out.println();
-		System.out.println("Quelle ordre voulez-vous donner ?");
+		System.out.println("\nQuelle ordre voulez-vous donner ?");
 
 		System.out.println("M - Modifier une action");
 		System.out.println("E - Echanger deux actions");
@@ -89,23 +78,12 @@ public class Ihm
 
 		switch (action)
 		{
-		case 'M':
-			this.afficherNbAction();
-			break;
-		case 'E':
-			this.ctrl.getPlateau().getJoueurActif().getRobot1().echangerAction();
-			break;
-		case 'A':
-			this.ctrl.getPlateau().getJoueurActif().getRobot1().ajouterAction();
-			break;
-		case 'R':
-			this.ctrl.getPlateau().getJoueurActif().getRobot1().retirerAction();
-			break;
-		case 'V':
-			this.ctrl.getPlateau().getJoueurActif().getRobot1().vider();
-			break;
-		case 'P':
-			break;
+			case 'M' : this.afficherNbAction(); break;
+			case 'E' : this.ctrl.getPlateau().getJoueurActif().getRobot1().echangerAction(); break;
+			case 'A' : this.ctrl.getPlateau().getJoueurActif().getRobot1().ajouterAction();  break;
+			case 'R' : this.ctrl.getPlateau().getJoueurActif().getRobot1().retirerAction();  break;
+			case 'V' : this.ctrl.getPlateau().getJoueurActif().getRobot1().vider();          break;
+			case 'P' : break;
 		}
 	}
 
@@ -116,7 +94,7 @@ public class Ihm
 		System.out.println("[1]  : La premiere");
 		System.out.println("[2]  : La seconde");
 		System.out.println("[3]  : La troisieme");
-		System.out.println("[10] : Aucune");
+		System.out.println("[0]  : Aucune");
 
 		int nbAction = Clavier.lire_int();
 
@@ -124,17 +102,18 @@ public class Ihm
 		case 1 : this.ctrl.getPlateau().getJoueurActif().getRobot1().modifierAction(1); break;
 		case 2 : this.ctrl.getPlateau().getJoueurActif().getRobot1().modifierAction(2); break;
 		case 3 : this.ctrl.getPlateau().getJoueurActif().getRobot1().modifierAction(3); break;
-		case 10: break;
+		case 0 : break;
 		}
 	}
 
-	public void getDessin(Tuile[][] tabTuiles)
+	public void afficherPlateau(Tuile[][] tabTuiles)
 	{
 		String chaine = "";
+		boolean test;
 
 		for (int i = 0; i < tabTuiles.length; i++)
 		{
-			boolean test = true;
+			test = true;
 			for (int j = 0; j < tabTuiles[i].length; j++)
 			{
 				if (i <= tabTuiles.length / 2) {
@@ -175,11 +154,9 @@ public class Ihm
 
 			for (int j = 0; j < tabTuiles[i].length; j++)
 			{
-				if (tabTuiles[i][j] == null) {
-					chaine += "    ";
-				} else {
-					chaine += "| " + tabTuiles[i][j] + " ";
-				}
+				if (tabTuiles[i][j] == null) { chaine += "    ";                       }
+				else                         { chaine += "| " + tabTuiles[i][j] + " "; }
+
 				if (j > 1 && j + 1 < tabTuiles[i].length)
 				{
 					if (tabTuiles[i][j - 1] != null && tabTuiles[i][j + 1] == null)
@@ -188,14 +165,12 @@ public class Ihm
 						break;
 					}
 				}
-				if (j + 1 >= tabTuiles[j].length)
-				{
-					chaine += "|";
-				}
+				if (j + 1 >= tabTuiles[j].length) { chaine += "|"; }
 			}
 			chaine += "\n";
 		}
-		boolean test = true;
+
+		test = true;
 		for (int j = 0; j < tabTuiles[tabTuiles.length - 1].length; j++)
 		{
 			if (j > 1 && tabTuiles[tabTuiles.length - 1][j - 1] != null && tabTuiles[tabTuiles.length - 1][j] == null)
@@ -209,12 +184,9 @@ public class Ihm
 				test = false;
 			}
 			if (test)
-				if (tabTuiles[tabTuiles.length - 1][j] != null)
-					chaine += "+---";
-				else
-					chaine += "    ";
+				if (tabTuiles[tabTuiles.length - 1][j] != null) { chaine += "+---"; }
+				else                                            { chaine += "    "; }
 		}
-
 		System.out.println(chaine);
 	}
 }
