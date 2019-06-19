@@ -41,6 +41,7 @@ public class Controleur
 		return Controleur.ihm.initNbJoueur();
 	}
 
+
 	public int premierJoueur(Joueur[] ensJoueurs)
 
 	{
