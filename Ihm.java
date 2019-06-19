@@ -38,7 +38,7 @@ public class Ihm
 
 		do
 		{
-			System.out.println("Quel est le joueur qui commence : ");
+			System.out.println("Quel est le joueur qui commence : \n");
 			for(int i = 0; i < ensJoueur.length; i++)
 			{
 				System.out.println("[" + i + "] " + ensJoueur[i].getCouleur());
@@ -62,29 +62,20 @@ public class Ihm
 
         System.out.println("Robots " + jActuel.getCouleur());
         
-        for (int r=1; r<3; r++)
-        {
-            System.out.print("[ ");
-            for (int o=0; o<3; o++)
-            {
-                System.out.print("(");
+        this.affichertabOrdre();
 
-                System.out.print(jActuel.getRobot(r).getOrdre(o));
-
-                System.out.print(")");
-            }
-
-            System.out.print(" ] ");
-        }
-
-		System.out.println( "\nJoueur " + this.ctrl.getPlateau().getJoueurActif().getCouleur() + " que voulez-vous faire :");
-		System.out.println();
+		System.out.println( "\nJoueur " + this.ctrl.getPlateau().getJoueurActif().getCouleur() + " que voulez-vous faire :\n");
 		System.out.println("1 : Changer un programme du robot 1");
 		System.out.println("2 : Changer un programme du robot 2");
 		System.out.println("P : Passer");
 
-		char choix = Clavier.lire_char();
-		//choix.toUpperCase();
+		char choix = Clavier.lireString().toUpperCase().charAt(0);
+
+        while (choix != '1' && choix != '2' && choix != 'P')
+        {
+            System.out.println("Choix incorrect !");
+            choix = Clavier.lireString().toUpperCase().charAt(0);
+        }
 
 		switch (choix)
 		{
@@ -98,7 +89,7 @@ public class Ihm
 	{
 		Robot robot = this.ctrl.getPlateau().getJoueurActif().getRobot(numRobot);
 
-		System.out.println("\nQuel ordre voulez-vous donner ?");
+		System.out.println("\nQuel ordre voulez-vous donner ?\n");
 
 		System.out.println("A - Ajouter une action"           );
 		System.out.println("E - Echanger deux actions"        );
@@ -106,30 +97,31 @@ public class Ihm
 		System.out.println("V - Vider les 3 actions"          );
 		System.out.println("P - Ne rien faire"                );
 
-		char action = Clavier.lire_char();
-		//action.toUpperCase();
+		char action = Clavier.lireString().toUpperCase().charAt(0);
+
+        while (action != 'A' && action != 'E' && action != 'R' && action != 'V' && action != 'N' && action != 'P')
+        {
+            System.out.println("Lettre incorrecte !\n");
+            action = Clavier.lireString().toUpperCase().charAt(0);
+        }
 
 		int numOrdre      = 0;
 		int positionOrdre = 0;
 
 		if (action != 'P')
 		{
-			System.out.println("\nQuelle action voulez-vous modifier ?"); 
-			System.out.println("[1]  : La premiere  : " + robot.getOrdre(0)/*.getType()*/);
-			System.out.println("[2]  : La seconde   : " + robot.getOrdre(1)/*.getType()*/);
-			System.out.println("[3]  : La troisieme : " + robot.getOrdre(2)/*.getType()*/);
-			System.out.println("[4]  : Annuler"     );	
-
-			do
-			{
-				positionOrdre = Clavier.lire_int()-1;
-			}
-			while (positionOrdre < 0 || positionOrdre > 3);
-
-
+			
 			switch(action)
 			{
-				case 'A' :  System.out.println("\nChoisissez un ordre:");
+				case 'A' :  this.afficherNbAction('A');
+
+							do
+							{
+								positionOrdre = Clavier.lire_int()-1;
+							}
+							while (positionOrdre < 0 || positionOrdre > 3);
+
+							System.out.println("\nChoisissez un ordre:\n");
 
 							for (int i=0; i<8; i++)
 							System.out.println(String.format("%-23s",i+1 + " - " + this.ctrl.getPlateau().getJoueurActif().getOrdre(i).getType()) +  " (" + this.ctrl.getPlateau().getJoueurActif().getOrdre(i).getNbExemplaires() + ") "); //Affiche tous les ordres
@@ -154,42 +146,88 @@ public class Ihm
 						    	this.ctrl.getPlateau().getJoueurActif().getOrdre(positionOrdre).getNbExemplairesMoinsUn();
 						    }
 
-						    break;
-				case 'E' :  int ordre1 = 0; int ordre2 = 0;
-						    System.out.println("Quels sont les ordres que vous voulez échanger ?");
-						    ordre1 = Clavier.lire_int();
-						    ordre2 = Clavier.lire_int();
-						    robot.echangerOrdre(ordre1, ordre2);break;
-	 
-				case 'R' :  robot.setOrdre(null, numOrdre);
-						    this.ctrl.getPlateau().getJoueurActif().getOrdre(positionOrdre).getNbExemplairesMoinsUn();
+						    this.affichertabOrdre();
+
 						    break;
 
-				case 'V' : for (int i=0; i<3; i++)
-				              robot.setOrdre(null, i);break;
+				case 'E' :  this.afficherNbAction('E');
+							int ordre1 = 0; int ordre2 = 0;
+						    System.out.println("Entrez la pemière puis entrez la seconde ?\n");
+						    do
+                            {
+                                ordre1 = Clavier.lire_int() - 1;
+                                ordre2 = Clavier.lire_int() - 1;
+                            } 
+                            while((ordre1 < 1 || ordre1 > 3) && (ordre2 < 1 || ordre2 > 3));
+						    robot.echangerOrdre(ordre1, ordre2);
+						    this.affichertabOrdre();
+						    break;
+	 
+				case 'R' :  this.affichertabOrdre();
+							this.afficherNbAction('R');
+							do
+							{
+								numOrdre = Clavier.lire_int()-1;
+							}
+							while (numOrdre < 0 || numOrdre > 7);
+
+							ordre = Ordre.values()[numOrdre];
+
+							robot.setOrdre(null, numOrdre);
+						    this.ctrl.getPlateau().getJoueurActif().getOrdre(positionOrdre).getNbExemplairesMoinsUn();
+						    this.affichertabOrdre();
+						    break;
+
+				case 'V' : this.affichertabOrdre();
+				
+						   for (int i=0; i<3; i++)
+				              robot.setOrdre(null, i);
+
+				          	this.affichertabOrdre();
+				        	break;
 
 				case 'P' : break;
 			}
 		}
 	}
 
-	public void afficherNbAction() //Modifié
+	public void affichertabOrdre()
 	{
-		System.out.println("\nQuelle action voulez-vous modifier ?"); 
+		 for (int r=1; r<3; r++)
+        {
+            System.out.print("[ ");
+            for (int o=0; o<3; o++)
+            {
+                System.out.print("(");
+
+                System.out.print(this.ctrl.getPlateau().getJoueurActif().getRobot(r).getOrdre(o));
+
+                System.out.print(")");
+            }
+
+            System.out.print(" ] \n");
+        }
+	}
+
+	public void afficherNbAction(char nomAction) //Modifié
+	{
+		System.out.println("\nQuelle action voulez-vous " + this.getNomAction(nomAction) + " ?\n"); 
 		System.out.println("[1]  : La premiere" );
 		System.out.println("[2]  : La seconde"  );
 		System.out.println("[3]  : La troisieme");
-		System.out.println("[10] : Annuler"     );
+		System.out.println("[4]  : Annuler"     );
 
-		int num = Clavier.lire_int();
+	}
 
-		/*switch(nbAction)
+	public String getNomAction(char nomAction)
+	{
+		switch(nomAction)
 		{
-			case 1  : this.ctrl.getPlateau().getJoueurActif().getRobot1().modifierAction(1); break;
-			case 2  : this.ctrl.getPlateau().getJoueurActif().getRobot1().modifierAction(2); break;
-			case 3  : this.ctrl.getPlateau().getJoueurActif().getRobot1().modifierAction(3); break;
-			case 10 : break;
-		}*/
+			case 'A' : return "ajouter";
+			case 'E' : return "échanger";
+			case 'R' : return "retirer";
+		}
+		return "";
 	}
 
 	public void afficherPlateau(Tuile[][] tabTuiles)
