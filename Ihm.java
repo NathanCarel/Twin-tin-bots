@@ -44,7 +44,12 @@ public class Ihm
 				System.out.println("[" + i + "] " + ensJoueur[i].getCouleur());
 			}
 			joueur = Clavier.lire_int();
-		}while(joueur < 0 || joueur > ensJoueur.length);
+			while (joueur < 0 || joueur > ensJoueur.length-1)
+			{
+				System.out.println("\nCe numéro n'est pas correct, veuillez recommencer\n");
+				joueur = Clavier.lire_int();
+			}
+		}while (joueur < 0 || joueur > ensJoueur.length);
 
 		return joueur;
 	}
@@ -56,17 +61,14 @@ public class Ihm
 		return plateau;
 	}
 
+
 	public void afficherChoix() //Modifié
 	{
-		Joueur jActuel = this.ctrl.getPlateau().getJoueurActif();
-
-        System.out.println("Robots " + jActuel.getCouleur());
-        
         this.affichertabOrdre();
 
 		System.out.println( "\nJoueur " + this.ctrl.getPlateau().getJoueurActif().getCouleur() + " que voulez-vous faire :\n");
-		System.out.println("1 : Changer un programme du robot 1");
-		System.out.println("2 : Changer un programme du robot 2");
+		System.out.println("1 : Changer le programme du robot 1");
+		System.out.println("2 : Changer le programme du robot 2");
 		System.out.println("P : Passer");
 
 		char choix = Clavier.lireString().toUpperCase().charAt(0);
@@ -179,7 +181,7 @@ public class Ihm
 						    break;
 
 				case 'V' : this.affichertabOrdre();
-				
+
 						   for (int i=0; i<3; i++)
 				              robot.setOrdre(null, i);
 
@@ -193,20 +195,31 @@ public class Ihm
 
 	public void affichertabOrdre()
 	{
-		 for (int r=1; r<3; r++)
-        {
-            System.out.print("[ ");
-            for (int o=0; o<3; o++)
-            {
-                System.out.print("(");
+		
+		Joueur jActuel = this.ctrl.getPlateau().getJoueurActif();
+		String ordre = "";
 
-                System.out.print(this.ctrl.getPlateau().getJoueurActif().getRobot(r).getOrdre(o));
+		System.out.print("+---------------------------------------------------------+");
+		System.out.print(String.format("%-3s", " ")+"+---------------------------------------------------------+\n");
+		System.out.print(String.format("%-58s",("| Robots " + jActuel.getCouleur()))+ "|   ");
+		System.out.print(String.format("%-58s",("| Robots " + jActuel.getCouleur()))+ "|\n");
+		System.out.print("+---------------------------------------------------------+");
+		System.out.print(String.format("%-3s", " ")+"+---------------------------------------------------------+\n");
 
-                System.out.print(")");
-            }
+		for (int i = 1; i < 3; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				System.out.print("| ");
+				if(jActuel.getRobot(i).getOrdre(j) != null ) { ordre = jActuel.getRobot(i).getOrdre(j).toString(); }
+				System.out.print(String.format("%-16s",ordre) + " ");
+				ordre = "";
+			}
 
-            System.out.print(" ] \n");
-        }
+			System.out.print(String.format("%-5s"," | "));
+		}
+		System.out.print("\n+---------------------------------------------------------+");
+		System.out.print(String.format("%-3s", " ")+"+---------------------------------------------------------+\n");
 	}
 
 	public void afficherNbAction(char nomAction) //Modifié
