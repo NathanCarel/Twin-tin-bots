@@ -10,14 +10,15 @@ import java.io.*;
 
 public class Plateau
 {
+	private static Tuile[][] tabTuile;  //3 statics à mettre pour la classe Robot (+ changer les this pour des Plateau)
+	private static Joueur[]  ensJoueur;
+	private static int       nbJoueur;
+
 	private  int              largeurMax;
 	private  int              hauteurMax;
 	private  Controleur       ctrl;
-	private  int              nbJoueur;
 	private  int              nbCristaux;
-	private  Joueur[]         ensJoueur;
 	private  Joueur           joueurActif;
-	private  Tuile[][]        tabTuile;
 	private  ArrayList<Robot> ensRobot;
 	private  ArrayList<Base>  ensBase;
 
@@ -25,24 +26,24 @@ public class Plateau
 	public Plateau(Controleur ctrl, int nbJoueur)
 	{
 		this.ctrl      = ctrl;
-		this.nbJoueur  = nbJoueur;
-		this.ensJoueur = new Joueur[nbJoueur];
+		Plateau.nbJoueur  = nbJoueur;
+		Plateau.ensJoueur = new Joueur[nbJoueur];
 		this.ensBase   = new ArrayList<Base>();
 		this.ensRobot  = new ArrayList<Robot>();
-		this.initJoueur(this.nbJoueur);
-		this.joueurActif = this.ensJoueur[this.ctrl.premierJoueur(this.ensJoueur)];
+		this.initJoueur(Plateau.nbJoueur);
+		this.joueurActif = Plateau.ensJoueur[this.ctrl.premierJoueur(Plateau.ensJoueur)];
 		this.initPlateau(nbJoueur);
 		this.jouer();
 	}
 
+	public static Tuile  getTuile  (int x, int y) { return Plateau.tabTuile[x][y]; } //Méthodes static à ajouter
+	public static Joueur getJoueur(int i)         { return Plateau.ensJoueur[i];   }
+	public static int    getNbJoueur ()           { return Plateau.nbJoueur;       }
+
+
 	public void jouer()
 	{
-		this.ctrl.getDessin(this.tabTuile);
-	}
-
-	public int getNbJoueur()
-	{
-		return this.nbJoueur;
+		this.ctrl.afficherPlateau(Plateau.tabTuile);
 	}
 
 	public Joueur getJoueurActif()
@@ -62,10 +63,10 @@ public class Plateau
 
 	public void initJoueur(int nbJoueur)
 	{
-		this.ensJoueur = new Joueur[nbJoueur];
+		Plateau.ensJoueur = new Joueur[nbJoueur];
 		for(int i = 0; i < nbJoueur; i++)
 		{
-			this.ensJoueur[i] = new Joueur();
+			Plateau.ensJoueur[i] = new Joueur();
 		}
 	}
 
@@ -93,7 +94,7 @@ public class Plateau
 			sc.close();
 		}
 		catch (Exception e) { e.printStackTrace(); }
-		this.tabTuile = new Tuile[this.hauteurMax][this.largeurMax];
+		Plateau.tabTuile = new Tuile[this.hauteurMax][this.largeurMax];
 		try
 		{
 			int hauteur = 0;
@@ -109,25 +110,25 @@ public class Plateau
 				{
 					composant[i].substring(1,2);
 					//Tuile vide
-					if (composant[i].charAt(1) == 'T') this.tabTuile[hauteur][largeur] = new Tuile("Vide", hauteur, largeur);
+					if (composant[i].charAt(1) == 'T') Plateau.tabTuile[hauteur][largeur] = new Tuile("Vide", hauteur, largeur);
 					//Robot
-					if (composant[i].charAt(1) == 'R') this.ensRobot.add((Robot)(this.tabTuile[hauteur][largeur] = new Robot("Robot", hauteur, largeur, "Rouge",composant[i].charAt(2))));
-					if (composant[i].charAt(1) == 'J') this.ensRobot.add((Robot)(this.tabTuile[hauteur][largeur] = new Robot("Robot", hauteur, largeur, "Jaune",composant[i].charAt(2))));
-					if (composant[i].charAt(1) == 'V') this.ensRobot.add((Robot)(this.tabTuile[hauteur][largeur] = new Robot("Robot", hauteur, largeur, "Vert",composant[i].charAt(2))));
-					if (composant[i].charAt(1) == 'B') this.ensRobot.add((Robot)(this.tabTuile[hauteur][largeur] = new Robot("Robot", hauteur, largeur, "Bleu",composant[i].charAt(2))));
-					if (composant[i].charAt(1) == 'M') this.ensRobot.add((Robot)(this.tabTuile[hauteur][largeur] = new Robot("Robot", hauteur, largeur, "Mauve",composant[i].charAt(2))));
-					if (composant[i].charAt(1) == 'S') this.ensRobot.add((Robot)(this.tabTuile[hauteur][largeur] = new Robot("Robot", hauteur, largeur, "Cyan",composant[i].charAt(2))));
+					if (composant[i].charAt(1) == 'R') this.ensRobot.add((Robot)(Plateau.tabTuile[hauteur][largeur] = new Robot("Robot", hauteur, largeur, "Rouge",composant[i].charAt(2))));
+					if (composant[i].charAt(1) == 'J') this.ensRobot.add((Robot)(Plateau.tabTuile[hauteur][largeur] = new Robot("Robot", hauteur, largeur, "Jaune",composant[i].charAt(2))));
+					if (composant[i].charAt(1) == 'V') this.ensRobot.add((Robot)(Plateau.tabTuile[hauteur][largeur] = new Robot("Robot", hauteur, largeur, "Vert",composant[i].charAt(2))));
+					if (composant[i].charAt(1) == 'B') this.ensRobot.add((Robot)(Plateau.tabTuile[hauteur][largeur] = new Robot("Robot", hauteur, largeur, "Bleu",composant[i].charAt(2))));
+					if (composant[i].charAt(1) == 'M') this.ensRobot.add((Robot)(Plateau.tabTuile[hauteur][largeur] = new Robot("Robot", hauteur, largeur, "Mauve",composant[i].charAt(2))));
+					if (composant[i].charAt(1) == 'S') this.ensRobot.add((Robot)(Plateau.tabTuile[hauteur][largeur] = new Robot("Robot", hauteur, largeur, "Cyan",composant[i].charAt(2))));
 					//Base
-					if (composant[i].charAt(1) == '1') this.ensBase.add((Base)(this.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "Rouge")));
-					if (composant[i].charAt(1) == '2') this.ensBase.add((Base)(this.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "Jaune")));
-					if (composant[i].charAt(1) == '3') this.ensBase.add((Base)(this.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "Vert")));
-					if (composant[i].charAt(1) == '4') this.ensBase.add((Base)(this.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "Bleu")));
-					if (composant[i].charAt(1) == '5') this.ensBase.add((Base)(this.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "Mauve")));
-					if (composant[i].charAt(1) == '6') this.ensBase.add((Base)(this.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "Cyan")));
+					if (composant[i].charAt(1) == '1') this.ensBase.add((Base)(Plateau.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "Rouge")));
+					if (composant[i].charAt(1) == '2') this.ensBase.add((Base)(Plateau.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "Jaune")));
+					if (composant[i].charAt(1) == '3') this.ensBase.add((Base)(Plateau.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "Vert")));
+					if (composant[i].charAt(1) == '4') this.ensBase.add((Base)(Plateau.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "Bleu")));
+					if (composant[i].charAt(1) == '5') this.ensBase.add((Base)(Plateau.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "Mauve")));
+					if (composant[i].charAt(1) == '6') this.ensBase.add((Base)(Plateau.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "Cyan")));
 					//Cristaux
-					if (composant[i].charAt(1) == '*') this.tabTuile[hauteur][largeur] = new Gemme("Gemme", hauteur, largeur, "Vert");
-					if (composant[i].charAt(1) == '-') this.tabTuile[hauteur][largeur] = new Gemme("Gemme", hauteur, largeur, "Bleu");
-					if (composant[i].charAt(1) == '+') this.tabTuile[hauteur][largeur] = new Gemme("Gemme", hauteur, largeur, "Cyan");
+					if (composant[i].charAt(1) == '*') Plateau.tabTuile[hauteur][largeur] = new Gemme("Gemme", hauteur, largeur, "Vert");
+					if (composant[i].charAt(1) == '-') Plateau.tabTuile[hauteur][largeur] = new Gemme("Gemme", hauteur, largeur, "Bleu");
+					if (composant[i].charAt(1) == '+') Plateau.tabTuile[hauteur][largeur] = new Gemme("Gemme", hauteur, largeur, "Cyan");
 					largeur++;
 				}
 				largeur = 0;
@@ -137,9 +138,9 @@ public class Plateau
 		}
 		catch(Exception e) { e.printStackTrace(); }
 
-		for(int i = 0; i < this.ensJoueur.length; i++)
+		for(int i = 0; i < Plateau.ensJoueur.length; i++)
 		{
-			this.ensJoueur[i].attributionRobot(this.ensRobot.get(i).getCouleur(), this.ensRobot.get(i));
+			Plateau.ensJoueur[i].attributionRobot(this.ensRobot.get(i).getCouleur(), this.ensRobot.get(i));
 		}
 	}
 
@@ -151,10 +152,10 @@ public class Plateau
 		{
 			for(int j = 0; j < this.largeurMax; j++)
 			{
-				if(this.tabTuile[i][j] == null) { chaine += " "; }
+				if(Plateau.tabTuile[i][j] == null) { chaine += " "; }
 				else
 				{
-					chaine += this.tabTuile[i][j];
+					chaine += Plateau.tabTuile[i][j];
 				}
 			}
 		}
@@ -170,8 +171,8 @@ public class Plateau
 		{
 			for(int j = 0; j < this.largeurMax; j++)
 			{
-				if(this.tabTuile[i][j] == null) { chaine+= " ";                  }
-				else                            { chaine += this.tabTuile[i][j]; }
+				if(Plateau.tabTuile[i][j] == null) { chaine+= " ";                  }
+				else                            { chaine += Plateau.tabTuile[i][j]; }
 
 			}
 			chaine += "\n";

@@ -18,7 +18,6 @@ public class Controleur
 	{
 		Controleur.ihm      = new Ihm    (this);
 		Controleur.plateau  = new Plateau(this, Controleur.ihm.initNbJoueur());
-
 	}
 
 	public Plateau getPlateau()
@@ -26,9 +25,9 @@ public class Controleur
 		return Controleur.plateau;
 	}
 
-	public void getDessin(Tuile[][] tabTuiles)
+	public void afficherPlateau(Tuile[][] tabTuiles)
 	{
-		 Controleur.ihm.getDessin(tabTuiles);
+		 Controleur.ihm.afficherPlateau(tabTuiles);
 	}
 
 	public String getElement()
@@ -41,9 +40,7 @@ public class Controleur
 		return Controleur.ihm.initNbJoueur();
 	}
 
-
 	public int premierJoueur(Joueur[] ensJoueurs)
-
 	{
 		return Controleur.ihm.premierJoueur(ensJoueurs);
 	}
@@ -51,8 +48,11 @@ public class Controleur
 	public static void main(String[] args)
 	{
 		new Controleur();
-		//Controleur.ihm.afficherPlateau(Controleur.plateau.getNbJoueur());
-		Controleur.ihm.afficherChoix();
+		while (true)
+		{
+			Controleur.ihm.afficherPlateau(Controleur.plateau.getNbJoueur());
+			Controleur.ihm.afficherChoix();
+		}
 	}
 
 	// public String getNomJoueur()
