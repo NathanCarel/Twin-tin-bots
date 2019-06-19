@@ -14,6 +14,8 @@ public class Plateau
 	private static Joueur[]  ensJoueur;
 	private static int       nbJoueur;
 
+	private final  int       NB_POINTS_REQUIS = 11; //point requis pour 2 joueurs qui est la base de calcul de victoire
+
 	private  int              largeurMax;
 	private  int              hauteurMax;
 	private  Controleur       ctrl;
@@ -33,7 +35,6 @@ public class Plateau
 		this.initJoueur(Plateau.nbJoueur);
 		this.joueurActif = Plateau.ensJoueur[this.ctrl.premierJoueur(Plateau.ensJoueur)];
 		this.initPlateau(nbJoueur);
-		this.jouer();
 	}
 
 	public static Tuile  getTuile  (int x, int y) { return Plateau.tabTuile[x][y]; } //Méthodes static à ajouter
@@ -43,7 +44,12 @@ public class Plateau
 
 	public void jouer()
 	{
-		this.ctrl.afficherPlateau(Plateau.tabTuile);
+		while(!this.gagne())
+		{
+			this.ctrl.afficherPlateau(Plateau.tabTuile);
+			this.ctrl.afficherChoix();
+			this.JoueurSuivant();
+		}
 	}
 
 	public Joueur getJoueurActif()
@@ -56,9 +62,30 @@ public class Plateau
 		this.joueurActif = joueur;
 	}
 
-	public int selectionPlateau(int nbJoueur)
+	public void JoueurSuivant()
 	{
-		return 0;
+		for(int i = 0; i < Plateau.ensJoueur.length; i++)
+		{
+			if(Plateau.ensJoueur[i] == this.joueurActif )
+			{
+				if(Plateau.nbJoueur == 2)           { this.joueurActif = Plateau.ensJoueur[1-i]; break;}
+				if(i < Plateau.ensJoueur.length-1)  { this.joueurActif = Plateau.ensJoueur[1+i]; break;}
+				else                                { this.joueurActif = Plateau.ensJoueur[0];   break;}
+			}
+		}
+	}
+
+	public boolean gagne()
+	{
+		int nbPointRequis = NB_POINTS_REQUIS;
+		for(Joueur joueur : Plateau.ensJoueur)
+		{
+			for(int i = 2; i <= Plateau.nbJoueur; i++)
+			{
+				if(Plateau.nbJoueur == i && joueur.getNbPoints() == nbPointRequis-(i-2)) return true;
+			}
+		}
+		return false;
 	}
 
 	public void initJoueur(int nbJoueur)
@@ -142,41 +169,5 @@ public class Plateau
 		{
 			Plateau.ensJoueur[i].attributionRobot(this.ensRobot.get(i).getCouleur(), this.ensRobot.get(i));
 		}
-	}
-
-	public String getElement()
-	{
-		String chaine = "";
-
-		for(int i = 0; i < this.hauteurMax; i++)
-		{
-			for(int j = 0; j < this.largeurMax; j++)
-			{
-				if(Plateau.tabTuile[i][j] == null) { chaine += " "; }
-				else
-				{
-					chaine += Plateau.tabTuile[i][j];
-				}
-			}
-		}
-		return chaine;
-	}
-
-
-	public String toString()
-	{
-		String chaine = "";
-
-		for(int i = 0; i < this.hauteurMax; i++)
-		{
-			for(int j = 0; j < this.largeurMax; j++)
-			{
-				if(Plateau.tabTuile[i][j] == null) { chaine+= " ";                  }
-				else                            { chaine += Plateau.tabTuile[i][j]; }
-
-			}
-			chaine += "\n";
-		}
-		return chaine;
 	}
 }
