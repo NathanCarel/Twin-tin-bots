@@ -30,9 +30,9 @@ public class Controleur
 		 Controleur.ihm.afficherPlateau(tabTuiles);
 	}
 
-	public String getElement()
+	public void afficherChoix()
 	{
-		return Controleur.plateau.getElement();
+		Controleur.ihm.afficherChoix();
 	}
 
 	public int initNbJoueur()
@@ -48,20 +48,6 @@ public class Controleur
 	public static void main(String[] args)
 	{
 		new Controleur();
-		while (true)
-		{
-			Controleur.ihm.afficherPlateau(Controleur.plateau.getNbJoueur());
-			Controleur.ihm.afficherChoix();
-		}
+		Controleur.plateau.jouer();
 	}
-
-	// public String getNomJoueur()
-	// {
-	// 	return Controleur.metier.getNomJoueur();
-	// }
-
-	// public String getInfosJoueur()
-	// {
-	// 	return Controleur.metier.getInfosJoueur();
-	// }
 }
