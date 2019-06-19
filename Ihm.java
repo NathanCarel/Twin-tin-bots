@@ -89,6 +89,8 @@ public class Ihm
 
 	public void afficherAction(int numRobot) //Modifié
 	{
+		Joueur jActuel = this.ctrl.getPlateau().getJoueurActif();
+
 		Robot robot = this.ctrl.getPlateau().getJoueurActif().getRobot(numRobot);
 
 		System.out.println("\nQuel ordre voulez-vous donner ?\n");
@@ -126,26 +128,39 @@ public class Ihm
 							System.out.println("\nChoisissez un ordre:\n");
 
 							for (int i=0; i<8; i++)
-							System.out.println(String.format("%-23s",i+1 + " - " + this.ctrl.getPlateau().getJoueurActif().getOrdre(i).getType()) +  " (" + this.ctrl.getPlateau().getJoueurActif().getOrdre(i).getNbExemplaires() + ") "); //Affiche tous les ordres
+								System.out.println(String.format("%-23s",i+1 + " - " + jActuel.getOrdre(i).getType()) +  " (" + jActuel.getOrdre(i).getNbExemplaires() + ") "); //Affiche tous les ordres
 
 							do
 							{
 								numOrdre = Clavier.lire_int()-1;
+								System.out.println("lol" + jActuel.getOrdre(numOrdre).getNbExemplaires());
+
 							}
-							while (numOrdre < 0 || numOrdre > 7);
+							while ( numOrdre < 0 || numOrdre > 7 && jActuel.getOrdre(numOrdre).getNbExemplaires() > 0);
 
 							Ordre ordre = new Ordre (enumOrdre.values()[numOrdre]);
+							Ordre aucun = new Ordre (enumOrdre.AUCUN);
 
-						    if(this.ctrl.getPlateau().getJoueurActif().getOrdre(positionOrdre) == null)
+						    if(jActuel.getOrdre(positionOrdre).getType().equals(aucun.getType()))
 						    {
 						    	robot.setOrdre(ordre, positionOrdre);
-						     	this.ctrl.getPlateau().getJoueurActif().getOrdre(positionOrdre).getNbExemplairesMoinsUn();
+
+						     	for (int i=0; i<jActuel.getStockOrdre().length; i++)
+									if (robot.getOrdre(positionOrdre).getType().equals(jActuel.getOrdre(i).getType()))
+										jActuel.getOrdre(i).setNbExemplairesMoinsUn();
 						    }
 						    else
 						    {
-						    	this.ctrl.getPlateau().getJoueurActif().getOrdre(positionOrdre).getNbExemplairesPlusUn();
+
+						    	for (int i=0; i<jActuel.getStockOrdre().length; i++)
+									if (robot.getOrdre(positionOrdre).getType().equals(jActuel.getOrdre(i).getType()))
+										jActuel.getOrdre(i).setNbExemplairesPlusUn();
+
 						    	robot.setOrdre(ordre, positionOrdre);
-						    	this.ctrl.getPlateau().getJoueurActif().getOrdre(positionOrdre).getNbExemplairesMoinsUn();
+						    	
+						    	for (int i=0; i<jActuel.getStockOrdre().length; i++)
+									if (robot.getOrdre(positionOrdre).getType().equals(jActuel.getOrdre(i).getType()))
+										jActuel.getOrdre(i).setNbExemplairesMoinsUn();
 						    }
 
 						    this.affichertabOrdre();
@@ -169,21 +184,24 @@ public class Ihm
 							this.afficherNbAction('R');
 							do
 							{
-								numOrdre = Clavier.lire_int()-1;
+								positionOrdre = Clavier.lire_int()-1;
 							}
-							while (numOrdre < 0 || numOrdre > 7);
+							while (positionOrdre < 0 || positionOrdre > 2);
 
-							ordre = new Ordre (enumOrdre.values()[numOrdre]);
+							ordre = new Ordre (enumOrdre.values()[positionOrdre]);
 
-							robot.setOrdre(null, numOrdre);
-						    this.ctrl.getPlateau().getJoueurActif().getOrdre(positionOrdre).getNbExemplairesMoinsUn();
+							for (int i=0; i<jActuel.getStockOrdre().length; i++)
+								if (robot.getOrdre(positionOrdre).getType().equals(jActuel.getOrdre(i).getType()))
+									jActuel.getOrdre(i).setNbExemplairesPlusUn();
+
+							robot.setOrdre(new Ordre (enumOrdre.AUCUN), positionOrdre);
 						    this.affichertabOrdre();
 						    break;
 
 				case 'V' : this.affichertabOrdre();
 
 						   for (int i=0; i<3; i++)
-				              robot.setOrdre(null, i);
+				              robot.setOrdre(new Ordre (enumOrdre.AUCUN), i);
 
 				          	this.affichertabOrdre();
 				        	break;

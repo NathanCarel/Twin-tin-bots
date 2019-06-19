@@ -13,11 +13,12 @@ public class Plateau
 	private static Tuile[][] tabTuile;  //3 variables static pour la classe Robot
 	private static Joueur[]  ensJoueur;
 	private static int       nbJoueur;
+	private static int       largeurMax;
+	private static int       hauteurMax;
 
 	private final  int       NB_POINTS_REQUIS = 11; //point requis pour 2 joueurs qui est la base de calcul de victoire
 
-	private  int              largeurMax;
-	private  int              hauteurMax;
+
 	private  Controleur       ctrl;
 	private  int              nbCristaux;
 	private  Joueur           joueurActif;
@@ -37,10 +38,13 @@ public class Plateau
 		this.initPlateau(nbJoueur);
 	}
 
-	public static Tuile  getTuile (int x, int y) { return Plateau.tabTuile[x][y]; } //Méthodes static utilisées pour modifier le tableau
-	public static Joueur getJoueur(int i)        { return Plateau.ensJoueur[i];   } //et pour avoir des informations sur les joueurs
-	public static int    getNbJoueur ()          { return Plateau.nbJoueur;       }
+	public static Tuile  getTuile (int x, int y) { return Plateau.tabTuile[x][y];               } //Méthodes static utilisées pour modifier le tableau
+	public static Joueur getJoueur(int i)        { return Plateau.ensJoueur[i];                 } //et pour avoir des informations sur les joueurs
+	public static int    getLargeurMax()		 {return Plateau.largeurMax;                    }
+	public static int    getHauteurMax()		 {return Plateau.hauteurMax;                    }
+	public static int    getNbJoueur ()          { return Plateau.nbJoueur;                     }
 	public static void   setTuile (Tuile tuile, int x, int y) { Plateau.tabTuile[x][y] = tuile; }
+
 
 	public void jouer()
 	{
@@ -115,14 +119,14 @@ public class Plateau
 				{
 					if(ligne.charAt(i) == ':') { largeur++; }
 				}
-				if(this.largeurMax < largeur ) this.largeurMax = largeur;
+				if(Plateau.largeurMax < largeur ) Plateau.largeurMax = largeur;
 				largeur = 0;
-				this.hauteurMax++;
+				Plateau.hauteurMax++;
 			}
 			sc.close();
 		}
 		catch (Exception e) { e.printStackTrace(); }
-		Plateau.tabTuile = new Tuile[this.hauteurMax][this.largeurMax];
+		Plateau.tabTuile = new Tuile[Plateau.hauteurMax][Plateau.largeurMax];
 		try
 		{
 			int hauteur = 0;

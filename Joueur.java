@@ -25,6 +25,7 @@ public class Joueur
   public int    getNbPoints()   { return this.nbPoints;      }
   public Base   getBase()       { return this.base;          }
   public Ordre  getOrdre(int i) { return this.stockOrdre[i]; }
+  public Ordre[] getStockOrdre() { return this.stockOrdre;    }
   public String getCouleur()    { return this.couleur;       }
 
   public void setNbPoints(int i) { this.nbPoints = i; }
