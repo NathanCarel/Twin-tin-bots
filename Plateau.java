@@ -10,7 +10,7 @@ import java.io.*;
 
 public class Plateau
 {
-	private static Tuile[][] tabTuile;  //3 statics à mettre pour la classe Robot (+ changer les this pour des Plateau)
+	private static Tuile[][] tabTuile;  //3 variables static pour la classe Robot
 	private static Joueur[]  ensJoueur;
 	private static int       nbJoueur;
 
@@ -37,10 +37,10 @@ public class Plateau
 		this.initPlateau(nbJoueur);
 	}
 
-	public static Tuile  getTuile  (int x, int y) { return Plateau.tabTuile[x][y]; } //Méthodes static à ajouter
-	public static Joueur getJoueur(int i)         { return Plateau.ensJoueur[i];   }
-	public static int    getNbJoueur ()           { return Plateau.nbJoueur;       }
-
+	public static Tuile  getTuile (int x, int y) { return Plateau.tabTuile[x][y]; } //Méthodes static utilisées pour modifier le tableau
+	public static Joueur getJoueur(int i)        { return Plateau.ensJoueur[i];   } //et pour avoir des informations sur les joueurs
+	public static int    getNbJoueur ()          { return Plateau.nbJoueur;       }
+	public static void   setTuile (Tuile tuile, int x, int y) { Plateau.tabTuile[x][y] = tuile; }
 
 	public void jouer()
 	{
@@ -48,6 +48,7 @@ public class Plateau
 		{
 			this.ctrl.afficherPlateau(Plateau.tabTuile);
 			this.ctrl.afficherChoix();
+			this.joueurActif.actionsRobots(); //Lance les 3 actions des 2 robots
 			this.JoueurSuivant();
 		}
 	}
@@ -141,17 +142,17 @@ public class Plateau
 					//Robot
 					if (composant[i].charAt(1) == 'R') this.ensRobot.add((Robot)(Plateau.tabTuile[hauteur][largeur] = new Robot("Robot", hauteur, largeur, "Rouge",composant[i].charAt(2))));
 					if (composant[i].charAt(1) == 'J') this.ensRobot.add((Robot)(Plateau.tabTuile[hauteur][largeur] = new Robot("Robot", hauteur, largeur, "Jaune",composant[i].charAt(2))));
-					if (composant[i].charAt(1) == 'V') this.ensRobot.add((Robot)(Plateau.tabTuile[hauteur][largeur] = new Robot("Robot", hauteur, largeur, "Vert",composant[i].charAt(2))));
-					if (composant[i].charAt(1) == 'B') this.ensRobot.add((Robot)(Plateau.tabTuile[hauteur][largeur] = new Robot("Robot", hauteur, largeur, "Bleu",composant[i].charAt(2))));
+					if (composant[i].charAt(1) == 'V') this.ensRobot.add((Robot)(Plateau.tabTuile[hauteur][largeur] = new Robot("Robot", hauteur, largeur, "Vert" ,composant[i].charAt(2))));
+					if (composant[i].charAt(1) == 'B') this.ensRobot.add((Robot)(Plateau.tabTuile[hauteur][largeur] = new Robot("Robot", hauteur, largeur, "Bleu" ,composant[i].charAt(2))));
 					if (composant[i].charAt(1) == 'M') this.ensRobot.add((Robot)(Plateau.tabTuile[hauteur][largeur] = new Robot("Robot", hauteur, largeur, "Mauve",composant[i].charAt(2))));
-					if (composant[i].charAt(1) == 'S') this.ensRobot.add((Robot)(Plateau.tabTuile[hauteur][largeur] = new Robot("Robot", hauteur, largeur, "Cyan",composant[i].charAt(2))));
+					if (composant[i].charAt(1) == 'S') this.ensRobot.add((Robot)(Plateau.tabTuile[hauteur][largeur] = new Robot("Robot", hauteur, largeur, "Cyan" ,composant[i].charAt(2))));
 					//Base
 					if (composant[i].charAt(1) == '1') this.ensBase.add((Base)(Plateau.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "Rouge")));
 					if (composant[i].charAt(1) == '2') this.ensBase.add((Base)(Plateau.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "Jaune")));
-					if (composant[i].charAt(1) == '3') this.ensBase.add((Base)(Plateau.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "Vert")));
-					if (composant[i].charAt(1) == '4') this.ensBase.add((Base)(Plateau.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "Bleu")));
+					if (composant[i].charAt(1) == '3') this.ensBase.add((Base)(Plateau.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "Vert" )));
+					if (composant[i].charAt(1) == '4') this.ensBase.add((Base)(Plateau.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "Bleu" )));
 					if (composant[i].charAt(1) == '5') this.ensBase.add((Base)(Plateau.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "Mauve")));
-					if (composant[i].charAt(1) == '6') this.ensBase.add((Base)(Plateau.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "Cyan")));
+					if (composant[i].charAt(1) == '6') this.ensBase.add((Base)(Plateau.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "Cyan" )));
 					//Cristaux
 					if (composant[i].charAt(1) == '*') Plateau.tabTuile[hauteur][largeur] = new Gemme("Gemme", hauteur, largeur, "Vert");
 					if (composant[i].charAt(1) == '-') Plateau.tabTuile[hauteur][largeur] = new Gemme("Gemme", hauteur, largeur, "Bleu");
@@ -167,7 +168,8 @@ public class Plateau
 
 		for(int i = 0; i < Plateau.ensJoueur.length; i++)
 		{
-			Plateau.ensJoueur[i].attributionRobot(this.ensRobot.get(i).getCouleur(), this.ensRobot.get(i));
+			for (int j = 0; j < this.ensRobot.size(); j++)
+				Plateau.ensJoueur[i].attributionRobot(this.ensRobot.get(j).getCouleur(), this.ensRobot.get(j));
 		}
 	}
 }

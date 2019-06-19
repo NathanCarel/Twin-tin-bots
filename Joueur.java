@@ -16,7 +16,7 @@ public class Joueur
     this.stockOrdre = new Ordre[8];
 
     for (int i=0 ; i<8 ; i++)
-      this.stockOrdre[i] = Ordre.values()[i];
+      this.stockOrdre[i] = new Ordre (enumOrdre.values()[i]);
 
     this.couleur = Joueur.tabCouleurs[Joueur.nbJoueurs++];
   }
@@ -37,7 +37,15 @@ public class Joueur
         this.robot1 = robot;
       else
         this.robot2 = robot;
+
+      System.out.println(robot.getPosX() + "/" + robot.getPosY());
     }
+  }
+
+  public void actionsRobots()
+  {
+    this.robot1.actions();
+    this.robot2.actions();
   }
 
 }
