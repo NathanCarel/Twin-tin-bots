@@ -134,7 +134,7 @@ public class Ihm
 							}
 							while (numOrdre < 0 || numOrdre > 7);
 
-							Ordre ordre = Ordre.values()[numOrdre];
+							Ordre ordre = new Ordre (enumOrdre.values()[numOrdre]);
 
 						    if(this.ctrl.getPlateau().getJoueurActif().getOrdre(positionOrdre) == null)
 						    {
@@ -173,7 +173,7 @@ public class Ihm
 							}
 							while (numOrdre < 0 || numOrdre > 7);
 
-							ordre = Ordre.values()[numOrdre];
+							ordre = new Ordre (enumOrdre.values()[numOrdre]);
 
 							robot.setOrdre(null, numOrdre);
 						    this.ctrl.getPlateau().getJoueurActif().getOrdre(positionOrdre).getNbExemplairesMoinsUn();

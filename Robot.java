@@ -49,7 +49,6 @@ public class Robot extends Tuile
 
 	public void avancer(int nbCases)
 	{
-		if ()
 		Plateau.setTuile( new Tuile("Tuile", this.posX, this.posY) , this.posX, this.posY);
 
 		for(int i = 0; i<nbCases; i++)
@@ -216,12 +215,12 @@ public class Robot extends Tuile
 
 	public String toString()
 	{
-		if( this.couleur.equals("Rouge" )){return "\033[0;31m"+this.orientationAffichage+"\033[0m";}
-		if( this.couleur.equals("Jaune" )){return "\033[0;33m"+this.orientationAffichage+"\033[0m";}
-		if( this.couleur.equals("Vert"  )){return "\033[0;32m"+this.orientationAffichage+"\033[0m";}
-		if( this.couleur.equals("Bleu"  )){return "\033[0;34m"+this.orientationAffichage+"\033[0m";}
-		if( this.couleur.equals("Mauve" )){return "\033[0;35m"+this.orientationAffichage+"\033[0m";}
-		if( this.couleur.equals("Cyan"  )){return "\033[0;36m"+this.orientationAffichage+"\033[0m";}
+		// if( this.couleur.equals("Rouge" )){return "\033[0;31m"+this.orientationAffichage+"\033[0m";}
+		// if( this.couleur.equals("Jaune" )){return "\033[0;33m"+this.orientationAffichage+"\033[0m";}
+		// if( this.couleur.equals("Vert"  )){return "\033[0;32m"+this.orientationAffichage+"\033[0m";}
+		// if( this.couleur.equals("Bleu"  )){return "\033[0;34m"+this.orientationAffichage+"\033[0m";}
+		// if( this.couleur.equals("Mauve" )){return "\033[0;35m"+this.orientationAffichage+"\033[0m";}
+		// if( this.couleur.equals("Cyan"  )){return "\033[0;36m"+this.orientationAffichage+"\033[0m";}
 
 		return "" + this.orientationAffichage;
 	}
