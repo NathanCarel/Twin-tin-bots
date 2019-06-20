@@ -19,8 +19,8 @@ public class Ordre
     	return this.nbExemplaires;
     }
 
-    public void setNbExemplairesMoinsUn() { this.nbExemplaires--; }
-    public void setNbExemplairesPlusUn()  { this.nbExemplaires++; }
+    public void retirer()  { this.nbExemplaires--; }
+    public void ajouter()  { this.nbExemplaires++; }
 
     public String toString()
     {

@@ -6,8 +6,6 @@ public enum enumOrdre
 	TOURNERD           ("Tourner à droite"   , 3),
 	CHARGERCRISTAL     ("Charger cristal"    , 2),
 	DEPOSERCRISTAL     ("Deposer cristal"    , 2),
-	ZAP                ("Zap"                , 2),
-	DOUBLEMODIFICATION ("Double modification", 1),
     AUCUN              ("Aucun"              , 0);
 
 	private String type;

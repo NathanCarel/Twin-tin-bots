@@ -48,80 +48,62 @@ public class Robot extends Tuile
 	}
 
 	public void avancer(int nbCases)
-    {
-        // for(int i = 0; i<nbCases; i++)
-        // {
-        //     Plateau.setTuile( new Tuile("Tuile", this.posX, this.posY) , this.posX, this.posY);
-        //     int tmpX = 0;
-        //     int tmpY = 0;
+	{
+		for(int i = 0; i<nbCases; i++)
+		{
+			int tempPosX = this.posX;
+			int tempPosY = this.posY;
 
-            
-        //     switch (this.orientation)
-        //     {
-        //         case 0: this.posX--; tmpX = -1; break;
-        //         case 1: this.posY++; tmpY = +1; break;
-        //         case 2: this.posX++; tmpX = +1; break;
-        //         case 3: this.posY--; tmpY = -1; break;
-        //     }
+			int xPlus2 = 0;
+			int yPlus2 = 0;
 
-        //     Tuile tuileEnFace = Plateau.getTuile(this.posX, this.posY);
+			
+			switch (this.orientation)
+			{
+				case 0: tempPosX--; xPlus2 = -1; break;
+				case 1: tempPosY++; yPlus2 = +1; break;
+				case 2: tempPosX++; xPlus2 = +1; break;
+				case 3: tempPosY--; yPlus2 = -1; break;
+			}
 
-        //     if ( tuileEnFace.getType().equals("Gemme") ) 
-        //     {
-        //         Plateau.setTuile (tuileEnFace, this.posX + tmpX, this.posY + tmpY);
-        //     }
+			if (tempPosX < Plateau.getHauteurMax() && tempPosY < Plateau.getLargeurMax() && tempPosX >= 0 && tempPosY >= 0)
+			{
+				boolean poussable  = false;
+				Tuile tuileEnFace  = Plateau.getTuile(tempPosX, tempPosY);
+				Tuile tuileEnFace2 = Plateau.getTuile(tempPosX + xPlus2, tempPosY + yPlus2);
 
-           
+				if ( tuileEnFace2 != null && tuileEnFace2.getType() == "Tuile" ) {poussable = true;}
 
-        //     Plateau.setTuile(this, this.posX, this.posY);
+				if ( tuileEnFace != null && tuileEnFace.getType() != "Base" )
+				{
+					if ( tuileEnFace.getType() == "Tuile" || (tuileEnFace.getType() == "Robot" && poussable) || (tuileEnFace.getType() == "Gemme" && poussable) )
+					{
+						Plateau.setTuile( new Tuile("Tuile", this.posX, this.posY) , this.posX, this.posY);
+						this.posX = tempPosX;
+						this.posY = tempPosY;
 
+						if ( tuileEnFace.getType() == "Robot" && poussable )
+						{
+							tuileEnFace.setPosition(tempPosX + xPlus2, tempPosY + yPlus2);
+							Plateau.setTuile((Robot)(tuileEnFace), tempPosX + xPlus2, tempPosY + yPlus2);
+						}
 
-        // }
+						if ( tuileEnFace.getType() == "Gemme" && poussable )
+							Plateau.setTuile((Gemme)(tuileEnFace), tempPosX + xPlus2, tempPosY + yPlus2);
 
-        
-        int tempPosX, tempPosY;
-
-        tempPosX = this.posX;
-        tempPosY = this.posY;
-
-        for(int i = 0; i<nbCases; i++)
-        switch (this.orientation)
-        {
-            case 0: tempPosX--; break;
-            case 1: tempPosY++; break;
-            case 2: tempPosX++; break;
-            case 3: tempPosY--; break;
-        }
-
-        if(tempPosX < Plateau.getHauteurMax() && tempPosY < Plateau.getLargeurMax() &&
-            tempPosX >= 0 && tempPosY >= 0)
-        {
-            if(Plateau.getTuile(tempPosX, tempPosY) != null &&  Plateau.getTuile(tempPosX, tempPosY).getType() != "Base")
-            {
-                Plateau.setTuile( new Tuile("Tuile", this.posX, this.posY) , this.posX, this.posY);
-                this.posX = tempPosX;
-                this.posY = tempPosY;
-                Plateau.setTuile(this, tempPosX, tempPosY);
-            }
-            else
-            { Plateau.setTuile(this, this.posX, this.posY); }
-        }
-    }
+						Plateau.setTuile(this, this.posX, this.posY);
+					}
+				}
+				else
+				{ Plateau.setTuile(this, this.posX, this.posY); }
+			}
+		}
+	}
 
 
 	public void tourner(int direction)
 	{
-		int nouvelleDirection = this.orientation+direction;
-
-		if ( nouvelleDirection < 0 )
-			nouvelleDirection = 3;
-
-		if ( nouvelleDirection > 3 )
-			nouvelleDirection = 0;
-
-		this.orientation = nouvelleDirection;
-
-		System.out.println(this.orientation);
+		this.orientation = Math.floorMod(this.orientation + direction, 4); //modulo 4 pour n'avoir que 4 directions possibles
 
 		switch(this.orientation)
 		{
@@ -129,7 +111,6 @@ public class Robot extends Tuile
 			case 1: this.orientationAffichage = '>'; break;
 			case 2: this.orientationAffichage = 'v'; break;
 			case 3: this.orientationAffichage = '<'; break;
-			default: ;
 		}
 
 		Plateau.setTuile(this, this.posX, this.posY);
@@ -151,22 +132,25 @@ public class Robot extends Tuile
 
 		Tuile tuileEnFace = Plateau.getTuile(posCristX, posCristY);
 
-		if ( tuileEnFace.getType().equals("Gemme") ) 
+		if (tuileEnFace != null)
 		{
-			this.setGemme ((Gemme)tuileEnFace);
-			tuileEnFace = new Tuile("Tuile", posCristX, posCristY);
-
-            Plateau.setTuile(tuileEnFace, posCristX, posCristY);
-		}
-
-		if ( tuileEnFace.getType().equals("Robot") ) 
-		{
-			Robot robotEnFace = (Robot)(tuileEnFace);
-
-			if (robotEnFace.getGemme() != null)
+			if ( tuileEnFace.getType().equals("Gemme") ) 
 			{
-				this.setGemme (robotEnFace.getGemme());
-				robotEnFace.setGemme(null);
+				this.setGemme ((Gemme)tuileEnFace);
+				tuileEnFace = new Tuile("Tuile", posCristX, posCristY);
+
+				Plateau.setTuile(tuileEnFace, posCristX, posCristY);
+			}
+
+			if ( tuileEnFace.getType().equals("Robot") ) 
+			{
+				Robot robotEnFace = (Robot)(tuileEnFace);
+
+				if (robotEnFace.getGemme() != null)
+				{
+					this.setGemme (robotEnFace.getGemme());
+					robotEnFace.setGemme(null);
+				}
 			}
 		}
 	}
@@ -187,44 +171,44 @@ public class Robot extends Tuile
 
 		Tuile tuileEnFace = Plateau.getTuile(posCristX, posCristY);
 
-		if ( tuileEnFace.getType().equals("Tuile")  ) 
+		if ( this.getGemme() != null && tuileEnFace != null && tuileEnFace.getType() != "Gemme")
 		{
-			tuileEnFace = this.getGemme();
-            Plateau.setTuile((Gemme)(tuileEnFace), posCristX, posCristY);
-            this.setGemme(null);
-		}
-
-		if ( tuileEnFace.getType().equals("Robot") ) 
-		{
-			Robot robotEnFace = (Robot)(tuileEnFace);
-
-			if (robotEnFace.getGemme() == null)
+			if ( tuileEnFace.getType() == "Tuile" ) 
 			{
-				robotEnFace.setGemme(this.getGemme());
-				this.setGemme(null);
+				tuileEnFace = this.getGemme();
+				Plateau.setTuile((Gemme)(tuileEnFace), posCristX, posCristY);
 			}
-		}
 
-		if ( tuileEnFace.getType().equals("Base")  ) 
-		{
-			for (int i=0; i<Plateau.getNbJoueur(); i++)
+			if ( tuileEnFace.getType() == "Robot" ) 
 			{
-				Base baseEnFace = (Base)(tuileEnFace);
+				Robot robotEnFace = (Robot)(tuileEnFace);
 
-				if (Plateau.getJoueur(i).getCouleur() == baseEnFace.getCouleur())
+				if ( robotEnFace.getGemme() == null)
+				{ robotEnFace.setGemme(this.getGemme()); }
+			}
+
+			if ( tuileEnFace.getType() == "Base" ) //Condition non testée
+			{
+				for (int i=0; i<Plateau.getNbJoueur(); i++)
 				{
-					int gain;
+					Base baseEnFace = (Base)(tuileEnFace);
 
-					switch (this.getGemme().getCouleur())
+					if (Plateau.getJoueur(i).getCouleur() == baseEnFace.getCouleur())
 					{
-						case "Bleu": gain = 2; break;
-						case "Vert": gain = 3; break;
-						case "Rose": gain = 4; break;
-						default: gain = 0; break;
-					}
+						int gain;
 
-					Plateau.getJoueur(i).setNbPoints( Plateau.getJoueur(i).getNbPoints() + gain );
+						switch (this.getGemme().getCouleur())
+						{
+							case "bleu": gain = 2; break;
+							case "vert": gain = 3; break;
+							case "rose": gain = 4; break;
+							default: gain = 0; break;
+						}
+
+						Plateau.getJoueur(i).setNbPoints( Plateau.getJoueur(i).getNbPoints() + gain );
+					}
 				}
+
 			}
 
 			this.setGemme(null);
@@ -232,16 +216,16 @@ public class Robot extends Tuile
 	}
 
 
-	public void actions() //Méthode qui effectue toutes les actions du robot
+	public void faireActions() //Méthode qui effectue toutes les actions du robot
 	{
 		for (int i=0; i<this.tabOrdre.length; i++)
 		{
-			if (this.tabOrdre[i].getType().equals("Avancer 1x"))       { this.avancer(1);       }
-			if (this.tabOrdre[i].getType().equals("Avancer 2x"))       { this.avancer(2);       }
+			if (this.tabOrdre[i].getType().equals("Avancer 1x"      )) { this.avancer(1);       }
+			if (this.tabOrdre[i].getType().equals("Avancer 2x"      )) { this.avancer(2);       }
 			if (this.tabOrdre[i].getType().equals("Tourner à gauche")) { this.tourner(-1);      }
 			if (this.tabOrdre[i].getType().equals("Tourner à droite")) { this.tourner(1);       }
-            if (this.tabOrdre[i].getType().equals("Charger cristal"))  { this.prendreCristal(); }
-            if (this.tabOrdre[i].getType().equals("Deposer cristal"))  { this.deposerCristal(); }
+			if (this.tabOrdre[i].getType().equals("Charger cristal" )) { this.prendreCristal(); }
+            if (this.tabOrdre[i].getType().equals("Deposer cristal" )) { this.deposerCristal(); }
 		}
 	}
 
@@ -250,27 +234,27 @@ public class Robot extends Tuile
 
 	public String toString()
     {
-        // if( this.couleur.equals("Rouge" ))
+        // if( this.couleur.equals("rouge" ))
         // if(this.numRobot == 0)      {return "\033[0;31m"+this.orientationAffichage+"\033[0m";} //7 surligner et 4 souligner
         // else if (this.gemme != null){return "\033[7;31m"+this.orientationAffichage+"\033[0m";}
         // else                        {return "\033[4;31m"+this.orientationAffichage+"\033[0m";}
-        // if( this.couleur.equals("Jaune" ))
+        // if( this.couleur.equals("jaune" ))
         // if(this.numRobot == 0)      {return "\033[0;33m"+this.orientationAffichage+"\033[0m";}
         // else if (this.gemme != null){return "\033[7;33m"+this.orientationAffichage+"\033[0m";}
         // else                        {return "\033[4;33m"+this.orientationAffichage+"\033[0m";}
-        // if( this.couleur.equals("Vert"  ))
+        // if( this.couleur.equals("vert"  ))
         // if(this.numRobot == 0)      {return "\033[0;32m"+this.orientationAffichage+"\033[0m";}
         // else if (this.gemme != null){return "\033[7;32m"+this.orientationAffichage+"\033[0m";}
         // else                        {return "\033[4;32m"+this.orientationAffichage+"\033[0m";}
-        // if( this.couleur.equals("Bleu"  ))
+        // if( this.couleur.equals("bleu"  ))
         // if(this.numRobot == 0)      {return "\033[0;34m"+this.orientationAffichage+"\033[0m";}
         // else if (this.gemme != null){return "\033[7;34m"+this.orientationAffichage+"\033[0m";}
         // else                        {return "\033[4;34m"+this.orientationAffichage+"\033[0m";}
-        // if( this.couleur.equals("Violet"))
+        // if( this.couleur.equals("violet"))
         // if(this.numRobot == 0)      {return "\033[0;35m"+this.orientationAffichage+"\033[0m";}
         // else if (this.gemme != null){return "\033[7;35m"+this.orientationAffichage+"\033[0m";}
         // else                        {return "\033[4;35m"+this.orientationAffichage+"\033[0m";}
-        // if( this.couleur.equals("Cyan"  ))
+        // if( this.couleur.equals("cyan"  ))
         // if(this.numRobot == 0)      {return "\033[0;36m"+this.orientationAffichage+"\033[0m";}
         // else if (this.gemme != null){return "\033[7;31m"+this.orientationAffichage+"\033[0m";}
         // else                        {return "\033[4;36m"+this.orientationAffichage+"\033[0m";}
