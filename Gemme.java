@@ -16,7 +16,7 @@ public class Gemme extends Tuile
     {
       switch(couleur)
       {
-        case "bleu" : this.gain = 2; break;
+        case "cyan" : this.gain = 2; break;
         case "vert" : this.gain = 3; break;
         case "mauve": this.gain = 4; break;
         default     : this.gain = 0; break;

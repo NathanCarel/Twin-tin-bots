@@ -1,3 +1,4 @@
+import iut.algo.*;
 public class Robot extends Tuile
 {
 	private static char[] tabOrientation = new char[] {'N', 'E', 'S', 'O'};
@@ -206,7 +207,48 @@ public class Robot extends Tuile
 						gain = this.getGemme().getGain();
 
 						Plateau.getJoueur(i).setNbPoints( Plateau.getJoueur(i).getNbPoints() + gain );
-						Plateau.setTuile((Gemme)Plateau.enleverCristal(), (Plateau.getLargeurMax()-1)/2, (Plateau.getHauteurMax()-1)/2);
+
+						if ( Plateau.getTuile((Plateau.getLargeurMax()-1)/2, (Plateau.getHauteurMax()-1)/2).getType() == "Tuile" )
+							Plateau.setTuile((Gemme)Plateau.enleverCristal(), (Plateau.getLargeurMax()-1)/2, (Plateau.getHauteurMax()-1)/2);
+
+						else
+						{
+							int nbCouches = 1;
+							boolean caseVide = false;
+
+							while ( !caseVide )
+							{
+								for (int c=1; c<nbCouches+1; c++)
+									for (int d=1; d<nbCouches+1; d++)
+										if ( Plateau.getTuile( (Plateau.getLargeurMax()-1)/2 + c, (Plateau.getHauteurMax()-1)/2 + d).getType() == "Tuile" )
+											caseVide = true;
+
+								if (!caseVide)
+									nbCouches++;
+							}
+
+							System.out.println("Le centre est occup�, choisissez une case o� placer le cristal (Ctr = le centre du terrain).\n");
+							//System.out.println(" "  + -nbCouches + "/" + -nbCouches + " | "  + -nbCouches + "/0 | "  + -nbCouches + "/" + nbCouches + " "  );
+							//System.out.println("  0/"                  + -nbCouches +          " |  Ctr | "          + " 0/"            + nbCouches + " "  );
+							//System.out.println("  " +  nbCouches + "/" + -nbCouches + " |  " +  nbCouches + "/0 |  " +  nbCouches + "/" + nbCouches + " \n");
+
+							System.out.println(" -1/-1 | -1/0 | -1/1 "  );
+							System.out.println("  0/-1 |  Ctr |  0/1 "  );
+							System.out.println("  1/-1 |  1/0 |  1/1 \n");
+
+
+							int choixPosX = Clavier.lire_int();
+							int choixPosY = Clavier.lire_int();
+
+							while ( (choixPosX == 0 && choixPosY == 0) || (choixPosX < -nbCouches || choixPosX > nbCouches || choixPosY < -nbCouches || choixPosY > nbCouches) || Plateau.getTuile( (Plateau.getLargeurMax()-1)/2 + choixPosX, (Plateau.getHauteurMax()-1)/2 + choixPosY).getType() != "Tuile" )
+							{
+								System.out.println("Choix incorrect\n");
+								choixPosX = Clavier.lire_int();
+								choixPosY = Clavier.lire_int();
+							}
+
+							Plateau.setTuile((Gemme)Plateau.enleverCristal(), (Plateau.getLargeurMax()-1)/2 + choixPosX, (Plateau.getHauteurMax()-1)/2 + choixPosY);
+						}
 
 					}
 				}

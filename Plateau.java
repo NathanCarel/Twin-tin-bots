@@ -7,17 +7,19 @@ Projet_tut
 import java.util.*;
 import iut.algo.*;
 import java.io.*;
+import java.io.File;
 
 public class Plateau
 {
-	private static Tuile[][] tabTuile;  //3 variables static pour la classe Robot
-	private static Joueur[]  ensJoueur;
-	private static int       nbJoueur;
-	private static int       largeurMax;
-	private static int       hauteurMax;
-	private static int       nbCristaux = 8;
-	private static Gemme[]   tabCristal = new Gemme[8];
-	private static boolean   premierTour = true;
+	private static Tuile[][]  tabTuile;  //3 variables static pour la classe Robot
+	private static Joueur[]   ensJoueur;
+	private static int        nbJoueur;
+	private static int        largeurMax;
+	private static int        hauteurMax;
+	private static int        nbCristaux = 8;
+	private static Gemme[]    tabCristal = new Gemme[8];
+	private static boolean    premierTour = true;
+	private static boolean    chargement = false;
 
 	private final  int       NB_POINTS_REQUIS = 11; //point requis pour 2 joueurs qui est la base de calcul de victoire
 
@@ -27,30 +29,42 @@ public class Plateau
 	private  ArrayList<Robot> ensRobot;
 	private  ArrayList<Base>  ensBase;
 
-	private Gemme critalVert   = new Gemme("Gemme", 0, 0, "vert"  );
-	private Gemme critalViolet = new Gemme("Gemme", 0, 0, "mauve");
+	private Gemme cristalVert   = new Gemme("Gemme", 0, 0, "vert"  );
+	private Gemme cristalMauve  = new Gemme("Gemme", 0, 0, "mauve");
 
 
 	public Plateau(Controleur ctrl, int nbJoueur)
 	{
 		this.ctrl      = ctrl;
 		Plateau.nbJoueur  = nbJoueur;
-		Plateau.ensJoueur = new Joueur[nbJoueur];
+
 		this.ensBase   = new ArrayList<Base>();
 		this.ensRobot  = new ArrayList<Robot>();
-		this.initJoueur(Plateau.nbJoueur);
-		this.joueurActif = Plateau.ensJoueur[this.ctrl.premierJoueur(Plateau.ensJoueur)];
+		if(Plateau.nbJoueur != 0)
+		{
+			Plateau.ensJoueur = new Joueur[nbJoueur];
+			this.initJoueur(Plateau.nbJoueur);
+			this.joueurActif = Plateau.ensJoueur[this.ctrl.premierJoueur(Plateau.ensJoueur)];
+		}
 		this.initPlateau(nbJoueur);
 		this.initPisteCristaux();
 	}
 
 	public void initPisteCristaux()
 	{
-		for(int i=0; i<tabCristal.length; i++)
-			if(i<4)
-				tabCristal[i] = this.critalVert;
+		Plateau.nbCristaux = 11 - Plateau.nbJoueur;
+
+		if (Plateau.nbJoueur == 2) { Plateau.nbCristaux = 7; }
+
+		Plateau.tabCristal = new Gemme[Plateau.nbCristaux];
+
+		for(int i=tabCristal.length-1; i>=0; i--)
+		{
+			if(i<tabCristal.length-4)
+				tabCristal[i] = this.cristalVert;
 			else
-				tabCristal[i] = this.critalViolet;
+				tabCristal[i] = this.cristalMauve;
+		}
 	}
 
 	public static Gemme enleverCristal()
@@ -69,26 +83,35 @@ public class Plateau
 	public static Tuile  getTuile (int x, int y)
 	{
 		if (x>Plateau.tabTuile.length || y>Plateau.tabTuile[0].length || x<0 || y<0)
-			return null;
+		return null;
 
 		return Plateau.tabTuile[x][y];
 	}
-	                                                                                         //M�thodes static utilis�es pour modifier le tableau
+	//M�thodes static utilis�es pour modifier le tableau
 	public static Joueur getJoueur(int i)                     { return Plateau.ensJoueur[i];    } //et pour avoir des informations sur les joueurs
 	public static int    getLargeurMax()		                  { return Plateau.largeurMax;      }
 	public static int    getHauteurMax()		                  { return Plateau.hauteurMax;      }
 	public static int    getNbJoueur ()                       { return Plateau.nbJoueur;        }
 	public static void   setTuile (Tuile tuile, int x, int y) { Plateau.tabTuile[x][y] = tuile; }
+	public static Gemme[] getTabCristal()                     { return Plateau.tabCristal;      }
+	public static void    setPremierTour(boolean premier)     { Plateau.premierTour = premier;  }
 
 
 	public void jouer()
 	{
-		while(!this.gagne())
+		if(Plateau.chargement)
 		{
 			this.ctrl.afficherPlateau(Plateau.tabTuile);
-			this.ctrl.afficherChoix(Plateau.premierTour);
-			this.joueurActif.actionsRobots(); //Lance les 3 actions des 2 robots
-			this.JoueurSuivant();
+		}
+		else
+		{
+			while(!this.gagne())
+			{
+				this.ctrl.afficherPlateau(Plateau.tabTuile);
+				this.ctrl.afficherChoix(Plateau.premierTour);
+				this.joueurActif.actionsRobots(); //Lance les 3 actions des 2 robots
+				this.JoueurSuivant();
+			}
 		}
 	}
 
@@ -140,12 +163,14 @@ public class Plateau
 	public void initPlateau(int nbJoueur)
 	{
 		int largeur = 0;
-		FileReader fichier;
+		File fichier;
 		String ligne = "";
+		int nbJoueurScenario = 0;
 
 		try
 		{
-			fichier = new FileReader( "./Plateau/Plateau"+nbJoueur+".data");
+			if(nbJoueur == 0) { fichier = new File( "./Plateau/Test.data"); }
+			else                fichier = new File( "./Plateau/Plateau"+nbJoueur+".data");
 			Scanner sc = new Scanner ( fichier );
 			while ( sc.hasNext() )
 			{
@@ -162,11 +187,55 @@ public class Plateau
 		}
 		catch (Exception e) { e.printStackTrace(); }
 		Plateau.tabTuile = new Tuile[Plateau.hauteurMax][Plateau.largeurMax];
+
+		//CHARGEMENT DE SCENARIO
+
+		if(nbJoueur == 0)
+		{
+			//Plateau.chargement = true;
+			try
+			{
+				do
+				{
+					fichier = new File( "./Scenario/"+Ihm.chargerScenario()+".data");
+				}while(!fichier.exists());
+
+				Scanner sc = new Scanner( fichier );
+				String[] composant = new String[5];
+				int x;
+				int y;
+				char orientation;
+				String couleur;
+
+				while ( sc.hasNext() )
+				{
+					ligne = sc.nextLine();
+					composant = ligne.split(":");
+					if(!composant[0].equals("init")) break;
+
+					if(composant[2].equals("1")) nbJoueurScenario++;
+					x = Integer.valueOf(composant[3]);
+					y = Integer.valueOf(composant[4]);
+					orientation = composant[composant.length-1].charAt(0);
+					couleur = composant[1];
+					this.ensRobot.add((Robot)(Plateau.tabTuile[x][y] = new Robot("Robot",x,y,couleur,orientation)));
+				}
+				sc.close();
+			}
+			catch (Exception e) {e.printStackTrace(); }
+			this.initJoueur(nbJoueurScenario);
+			this.joueurActif = Plateau.ensJoueur[0];
+
+		}
+
+		//CHARGEMENT NORMAL
+
 		try
 		{
 			int hauteur = 0;
 			ligne = "";
-			fichier = new FileReader( "./Plateau/Plateau"+nbJoueur+".data");
+			if(nbJoueur == 0) { fichier = new File( "./Plateau/Test.data"); }
+			else                fichier = new File( "./Plateau/Plateau"+nbJoueur+".data");
 			Scanner sc = new Scanner ( fichier );
 			String[] composant;
 			while(sc.hasNext())
@@ -193,9 +262,9 @@ public class Plateau
 					if (composant[i].charAt(1) == '5') this.ensBase.add((Base)(Plateau.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "mauve")));
 					if (composant[i].charAt(1) == '6') this.ensBase.add((Base)(Plateau.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "cyan" )));
 					//Cristaux
-					if (composant[i].charAt(1) == '-') Plateau.tabTuile[hauteur][largeur] = new Gemme("Gemme", hauteur, largeur, "bleu");
+					if (composant[i].charAt(1) == '-') Plateau.tabTuile[hauteur][largeur] = new Gemme("Gemme", hauteur, largeur, "cyan");
 					if (composant[i].charAt(1) == '*') Plateau.tabTuile[hauteur][largeur] = new Gemme("Gemme", hauteur, largeur, "vert");
-					if (composant[i].charAt(1) == '+') Plateau.tabTuile[hauteur][largeur] = new Gemme("Gemme", hauteur, largeur, "rose");
+					if (composant[i].charAt(1) == '+') Plateau.tabTuile[hauteur][largeur] = new Gemme("Gemme", hauteur, largeur, "mauve");
 					largeur++;
 				}
 				largeur = 0;
@@ -204,11 +273,12 @@ public class Plateau
 			sc.close();
 		}
 		catch(Exception e) { e.printStackTrace(); }
+		nbJoueur = nbJoueurScenario;
 
 		for(int i = 0; i < Plateau.ensJoueur.length; i++)
 		{
 			for (int j = 0; j < this.ensRobot.size(); j++)
-				Plateau.ensJoueur[i].attributionRobot(this.ensRobot.get(j).getCouleur(), this.ensRobot.get(j));
+			Plateau.ensJoueur[i].attributionRobot(this.ensRobot.get(j).getCouleur(), this.ensRobot.get(j));
 		}
 	}
 }

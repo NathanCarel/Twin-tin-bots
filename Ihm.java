@@ -12,6 +12,7 @@ public class Ihm
 	private static int        numOrdre;
 	private static boolean    premierTour;
 	private        Controleur ctrl;
+	private        int        tour1;
 
 	public Ihm(Controleur ctrl)
 	{
@@ -21,6 +22,21 @@ public class Ihm
 
 	public int initNbJoueur()
 	{
+		int mode;
+
+		System.out.println("Bienvenu sur Twin Tin Bots !\n");
+		System.out.println("[1] Mode Scenario");
+		System.out.println("[2] Mode Normal");
+
+
+		mode = Clavier.lire_int();
+		while (!(mode == 1 || mode == 2))
+		{
+			System.out.println("Ce numéro n'est pas correct, veuillez recommencer.");
+			mode = Clavier.lire_int();
+		}
+		if(mode == 1) return 0;
+
 		System.out.println("Choisissez le nombre de joueur : ");
 
 		int nbJoueur = Clavier.lire_int();
@@ -41,7 +57,7 @@ public class Ihm
 		System.out.println("Quel est le joueur qui commence : \n");
 		for(int i = 0; i < ensJoueur.length; i++)
 		{
-			System.out.println("[" + (i+1) + "] " + ensJoueur[i].getCouleur());
+			System.out.println("[" + (i+1) + "] " + Utils.couleur(ensJoueur[i].getCouleur(), "normal", ensJoueur[i].getCouleur()) );
 		}
 
 		joueur = Clavier.lire_int() - 1;
@@ -69,30 +85,79 @@ public class Ihm
 		String resultat;
 		char   choix = 0;
 		Ihm.premierTour = premierTour;
+		int positionOrdre = 0;
 
-		this.affichertabOrdre();
-		System.out.println("Vous avez " + this.ctrl.getPlateau().getJoueurActif().getNbPoints() + " points\n" );
-		System.out.println( "\nJoueur " + Utils.couleur(couleur,"normal",couleur) + " que voulez-vous faire :\n");
-		System.out.println("[1] : Changer le programme du robot 1");
-		System.out.println("[2] : Changer le programme du robot 2");
-		System.out.println("[P]asser");
 
-		resultat = Clavier.lireString().toUpperCase();
-		if(!resultat.equals("")) choix = resultat.charAt(0);
-
-		while (choix != '1' && choix != '2' && (choix != 'P' || premierTour))
+		if (Ihm.premierTour) //Premier tour de jeu
 		{
-			if(premierTour) System.out.println("Erreur premier tour");
-			else            System.out.println("Choix incorrect !");
-			resultat = Clavier.lireString().toUpperCase();
-			if(!resultat.equals("")) choix = resultat.charAt(0);
+			System.out.println("C'est votre premier tour, vous devez ajouter une action sur chacun de vos robots.");
+
+			for (int r=0; r<2; r++)
+			{
+				Joueur jActuel = this.ctrl.getPlateau().getJoueurActif();
+				Robot robot    = jActuel.getRobot(r+1);
+
+				this.affichertabOrdre();
+
+				System.out.println( "\nJoueur " + Utils.couleur(couleur,"normal",couleur) + ", quelle action voulez-vous ajouter sur le robot " + (r+1) + " ?\n");
+
+				for (int i=0; i<6; i++)
+					System.out.println(String.format("%-23s", "[" + (i+1) + " ] - " + jActuel.getOrdre(i).getType()) +  " (" + jActuel.getOrdre(i).getNbExemplaires() + ") ");
+
+				Ihm.numOrdre = Clavier.lire_int()-1;
+
+				while (!this.verifStock(jActuel, Ihm.numOrdre))
+				{
+					System.out.println("Ordre déja tous utilisés");
+					Ihm.numOrdre = Clavier.lire_int()-1;
+				}
+
+				this.afficherNbAction('A', robot);
+
+				do
+				{ positionOrdre = Clavier.lire_int()-1; }
+				while (positionOrdre < 0 || positionOrdre > 2);
+
+				if (!jActuel.getOrdre(positionOrdre).getType().equals(enumOrdre.AUCUN.getType()))
+				{ modifStockJoueur(jActuel, robot, 1, positionOrdre); }
+
+				robot.setOrdre( new Ordre (enumOrdre.values()[Ihm.numOrdre]), positionOrdre);
+				modifStockJoueur(jActuel, robot, -1, positionOrdre);
+			}
+
+			this.tour1++;
+
+			if (this.tour1 == Plateau.getNbJoueur()) Plateau.setPremierTour(false);
 		}
 
-		switch (choix)
+
+		//Tour normal
+		else
 		{
-			case '1' : this.afficherAction(1); break;
-			case '2' : this.afficherAction(2); break;
-			case 'P' : break;
+			this.affichertabOrdre();
+			System.out.println("Vous avez " + this.ctrl.getPlateau().getJoueurActif().getNbPoints() + " points.\n" );
+			System.out.println( "\nJoueur " + Utils.couleur(couleur,"normal",couleur) + " que voulez-vous faire :\n");
+			System.out.println("[1] : Changer le programme du robot 1");
+			System.out.println("[2] : Changer le programme du robot 2");
+			System.out.println("[P]asser");
+
+			resultat = Clavier.lireString().toUpperCase();
+			if(!resultat.equals("")) choix = resultat.charAt(0);
+
+			while (choix != '1' && choix != '2' && (choix != 'P' || premierTour))
+			{
+				if(premierTour) System.out.println("Erreur premier tour");
+				else            System.out.println("Choix incorrect !");
+				resultat = Clavier.lireString().toUpperCase();
+				if(!resultat.equals("")) choix = resultat.charAt(0);
+			}
+
+			switch (choix)
+			{
+				case '1' : this.afficherAction(1); break;
+				case '2' : this.afficherAction(2); break;
+				case 'P' : break;
+			}
 		}
 	}
 
@@ -145,7 +210,7 @@ public class Ihm
 				Ihm.numOrdre = Clavier.lire_int()-1;
 				if(Ihm.numOrdre == 9) { this.afficherChoix(Ihm.premierTour); break; }
 			}
-			if(Ihm.numOrdre > 7) { break; }
+			//if(Ihm.numOrdre > 7) { break; }
 
 			if (!jActuel.getOrdre(positionOrdre).getType().equals(enumOrdre.AUCUN.getType()))
 			{ modifStockJoueur(jActuel, robot, 1, positionOrdre); }
@@ -223,19 +288,19 @@ public class Ihm
 		if( jActuel.getRobot(1).getGemme() != null)
 		{
 			gemmePossedee = " possède une gemme " + Utils.couleur(jActuel.getRobot(1).getGemme().getCouleur(),"normal",jActuel.getRobot(1).getGemme().getCouleur());
-			gemmePossedee += "(" + jActuel.getRobot(1).getGemme().getGain() + ")";
+			gemmePossedee += "(" + jActuel.getRobot(1).getGemme().getGain() + ")                 ";
 		}
 
 		if(jActuel.getRobot(2).getGemme() != null)
 		{
 			gemmePossedee2 = " possède une gemme " + Utils.couleur(jActuel.getRobot(2).getGemme().getCouleur(),"normal",jActuel.getRobot(2).getGemme().getCouleur());
-			gemmePossedee2 += "(" + jActuel.getRobot(2).getGemme().getGain() + ")";
+			gemmePossedee2 += "(" + jActuel.getRobot(2).getGemme().getGain() + ")                 ";
 		}
 
 		System.out.print("+---------------------------------------------------------+");
 		System.out.print(String.format("%-3s", " ")+"+---------------------------------------------------------+\n");
-		System.out.print(String.format("%-69s",("| " + Utils.couleur(jActuel.getCouleur(),"normal","Robot "+jActuel.getCouleur()) + gemmePossedee)) + "|   ");
-		System.out.print(String.format("%-69s",("| " + Utils.couleur(jActuel.getCouleur(),"souligne","Robot "+jActuel.getCouleur()) + gemmePossedee2)) +"|\n");
+		System.out.print(String.format("%-69s",("| " + Utils.couleur(jActuel.getCouleur(),"normal","Robot "+jActuel.getCouleur() + " 1") + gemmePossedee)) + "|   ");
+		System.out.print(String.format("%-69s",("| " + Utils.couleur(jActuel.getCouleur(),"souligne","Robot "+jActuel.getCouleur() + " 2") + gemmePossedee2)) +"|\n");
 		System.out.print("+------------------+------------------+-------------------+");
 		System.out.print(String.format("%-3s", " ")+"+------------------+------------------+-------------------+\n");
 
@@ -282,9 +347,15 @@ public class Ihm
 		{
 			System.out.println("Numéro incorrect");
 			Ihm.numOrdre = Clavier.lire_int()-1;
-			if(Ihm.numOrdre == 9) { this.afficherChoix(Ihm.premierTour); break;}
+			if(Ihm.numOrdre == 9 && !Ihm.premierTour) { this.afficherChoix(Ihm.premierTour); break;}
 		}
 		return(jActuel.getOrdre(Ihm.numOrdre).getNbExemplaires() > 0);
+	}
+
+	public static String chargerScenario()
+	{
+		System.out.println("Quel scenario voulez vous charger ?");
+		return Clavier.lireString();
 	}
 
 	public void afficherPlateau(Tuile[][] tabTuiles)
@@ -368,15 +439,27 @@ public class Ihm
 			if (tabTuiles[tabTuiles.length - 1][j] != null) { chaine += "+---"; }
 			else                                            { chaine += "    "; }
 		}
-		chaine += "\n +---+---+---+---+---+---+---+---+\n";
-        for(int l=0; l<8; l++)
+
+		chaine += "\n ";
+
+		for (int nbC = 0; nbC<Plateau.getTabCristal().length; nbC++)
+			chaine += "+---";
+
+		chaine += "+\n";
+
+        for(int l=0; l<Plateau.getTabCristal().length; l++)
         {
 					chaine += " | ";
 					if (Plateau.getCristal(l) == null) { chaine += " ";                   }
 					else                               { chaine += Plateau.getCristal(l); }
-				}
+		}
 
-        chaine += " |\n +---+---+---+---+---+---+---+---+\n";
+		chaine += " |\n ";
+
+        for (int nbC = 0; nbC<Plateau.getTabCristal().length; nbC++)
+			chaine += "+---";
+
+		chaine += "+\n";
 
 		System.out.println(chaine);
 	}

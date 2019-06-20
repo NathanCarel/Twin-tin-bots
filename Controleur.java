@@ -35,11 +35,6 @@ public class Controleur
 		Controleur.ihm.afficherChoix(premierTour);
 	}
 
-	public int initNbJoueur()
-	{
-		return Controleur.ihm.initNbJoueur();
-	}
-
 	public int premierJoueur(Joueur[] ensJoueurs)
 	{
 		return Controleur.ihm.premierJoueur(ensJoueurs);
