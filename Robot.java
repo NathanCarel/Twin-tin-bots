@@ -35,8 +35,9 @@ public class Robot extends Tuile
 	public int getPosX() { return this.posX; }
 	public int getPosY() { return this.posY; }
 
-	public void  setGemme(Gemme gemme) { this.gemme = gemme; }
-	public Gemme getGemme()            { return this.gemme;  }
+	public void  setGemme(Gemme gemme) { this.gemme = gemme;   }
+	public Gemme getGemme()            { return this.gemme;    }
+	public int   getNum()              { return this.numRobot; }
 
 	public void  setOrdre(Ordre ordre, int indice) { this.tabOrdre[indice] = ordre; }
 	public Ordre getOrdre(int i)                   { return this.tabOrdre[i];       }

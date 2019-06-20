@@ -22,6 +22,7 @@ public class Plateau
 	private static Gemme[]    tabCristal = new Gemme[8];
 	private static boolean    premierTour = true;
 	private static boolean    chargement = false;
+	private static File       scenario;
 
 
 
@@ -104,7 +105,7 @@ public class Plateau
 		this.ctrl.afficherPlateau(Plateau.tabTuile);
 		if(Plateau.chargement)
 		{
-			this.scanScenario()
+			this.scanScenario();
 		}
 		else
 		{
@@ -245,10 +246,10 @@ public class Plateau
 			{
 				do
 				{
-					fichier = new File( "./Scenario/"+Ihm.chargerScenario()+".data");
-				}while(!fichier.exists());
+					Plateau.scenario = new File( "./Scenario/"+Ihm.chargerScenario()+".data");
+				}while(!Plateau.scenario.exists());
 
-				Scanner sc = new Scanner( fichier );
+				Scanner sc = new Scanner( Plateau.scenario );
 				String[] composant = new String[5];
 				int x;
 				int y;
@@ -282,5 +283,41 @@ public class Plateau
 			for (int j = 0; j < this.ensRobot.size(); j++)
 			Plateau.ensJoueur[i].attributionRobot(this.ensRobot.get(j).getCouleur(), this.ensRobot.get(j));
 		}
+	}
+
+	public void scanScenario()
+	{
+		String   ligne = "";
+		String[] composant;
+		Ordre   ordre = null;
+		try
+		{
+			Scanner sc = new Scanner(Plateau.scenario);
+			while(sc.hasNext())
+			{
+				ligne = sc.nextLine();
+				composant = ligne.split(":");
+				if(composant[0].equals("action"))
+				{
+					for (int i = 0; i < this.ensRobot.size(); i++)
+					{
+						if(this.ensRobot.get(i).getCouleur().equals(composant[1]) && this.ensRobot.get(i).getNum() == Integer.valueOf(composant[2]))
+						{
+							for(int j = 3; j < composant.length; j++)
+							{
+								if (composant[j].equals("A1")) { ordre = new Ordre(enumOrdre.values()[0]); }
+								if (composant[j].equals("A2")) { ordre = new Ordre(enumOrdre.values()[1]); }
+								if (composant[j].equals("TG")) { ordre = new Ordre(enumOrdre.values()[2]); }
+								if (composant[j].equals("TD")) { ordre = new Ordre(enumOrdre.values()[3]); }
+								if (composant[j].equals("CC")) { ordre = new Ordre(enumOrdre.values()[4]); }
+								if (composant[j].equals("DC")) { ordre = new Ordre(enumOrdre.values()[5]); }
+								if (composant[j].equals("  ")) { ordre = new Ordre(enumOrdre.AUCUN);       }
+								this.ensRobot.get(i).setOrdre(ordre, j-3);
+							}
+						}
+					}
+				}
+			}
+		}catch (Exception e) {e.printStackTrace();}
 	}
 }
