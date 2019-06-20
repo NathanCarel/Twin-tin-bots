@@ -19,10 +19,6 @@ public class Tuile
 
     public String toString()
     {
-        String chaine = "";
-
-        chaine += " ";
-
-        return chaine;
+      return " ";
     }
 }

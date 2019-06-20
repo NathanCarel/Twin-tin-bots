@@ -18,7 +18,7 @@ public abstract class Utils
     {
       for(int j = 0; j < Utils.tabCouleurs.length; j++)
       {
-        if(couleur == tabCouleurs[j][0] && type == tabType[i][0])
+        if(couleur.equals(tabCouleurs[j][0]) && type.equals(tabType[i][0]))
         { chaine = ("\033["+tabType[i][1]+tabCouleurs[j][1]); }
       }
     }

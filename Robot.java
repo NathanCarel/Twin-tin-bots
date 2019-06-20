@@ -97,7 +97,7 @@ public class Robot extends Tuile
 						}
 
 						if ( tuileEnFace.getType() == "Gemme" && poussable )
-						Plateau.setTuile((Gemme)(tuileEnFace), tempPosX + xPlus2, tempPosY + yPlus2);
+						Plateau.setTuile((tuileEnFace), tempPosX + xPlus2, tempPosY + yPlus2);
 
 						Plateau.setTuile(this, this.posX, this.posY);
 					}
@@ -183,7 +183,7 @@ public class Robot extends Tuile
 			if ( tuileEnFace.getType() == "Tuile" )
 			{
 				tuileEnFace = this.getGemme();
-				Plateau.setTuile((Gemme)(tuileEnFace), posCristX, posCristY);
+				Plateau.setTuile((tuileEnFace), posCristX, posCristY);
 			}
 
 			if ( tuileEnFace.getType() == "Robot" )
@@ -209,7 +209,7 @@ public class Robot extends Tuile
 						Plateau.getJoueur(i).setNbPoints( Plateau.getJoueur(i).getNbPoints() + gain );
 
 						if ( Plateau.getTuile((Plateau.getLargeurMax()-1)/2, (Plateau.getHauteurMax()-1)/2).getType() == "Tuile" )
-							Plateau.setTuile((Gemme)Plateau.enleverCristal(), (Plateau.getLargeurMax()-1)/2, (Plateau.getHauteurMax()-1)/2);
+							Plateau.setTuile(Plateau.enleverCristal(), (Plateau.getLargeurMax()-1)/2, (Plateau.getHauteurMax()-1)/2);
 
 						else
 						{
@@ -247,7 +247,7 @@ public class Robot extends Tuile
 								choixPosY = Clavier.lire_int();
 							}
 
-							Plateau.setTuile((Gemme)Plateau.enleverCristal(), (Plateau.getLargeurMax()-1)/2 + choixPosX, (Plateau.getHauteurMax()-1)/2 + choixPosY);
+							Plateau.setTuile(Plateau.enleverCristal(), (Plateau.getLargeurMax()-1)/2 + choixPosX, (Plateau.getHauteurMax()-1)/2 + choixPosY);
 						}
 
 					}

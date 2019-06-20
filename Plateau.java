@@ -11,6 +11,8 @@ import java.io.File;
 
 public class Plateau
 {
+	private final  int       NB_POINTS_REQUIS = 11; //point requis pour 2 joueurs qui est la base de calcul de victoire
+
 	private static Tuile[][]  tabTuile;  //3 variables static pour la classe Robot
 	private static Joueur[]   ensJoueur;
 	private static int        nbJoueur;
@@ -21,7 +23,7 @@ public class Plateau
 	private static boolean    premierTour = true;
 	private static boolean    chargement = false;
 
-	private final  int       NB_POINTS_REQUIS = 11; //point requis pour 2 joueurs qui est la base de calcul de victoire
+
 
 
 	private  Controleur       ctrl;
@@ -99,15 +101,15 @@ public class Plateau
 
 	public void jouer()
 	{
+		this.ctrl.afficherPlateau(Plateau.tabTuile);
 		if(Plateau.chargement)
 		{
-			this.ctrl.afficherPlateau(Plateau.tabTuile);
+			this.scanScenario()
 		}
 		else
 		{
 			while(!this.gagne())
 			{
-				this.ctrl.afficherPlateau(Plateau.tabTuile);
 				this.ctrl.afficherChoix(Plateau.premierTour);
 				this.joueurActif.actionsRobots(); //Lance les 3 actions des 2 robots
 				this.JoueurSuivant();
@@ -188,46 +190,6 @@ public class Plateau
 		catch (Exception e) { e.printStackTrace(); }
 		Plateau.tabTuile = new Tuile[Plateau.hauteurMax][Plateau.largeurMax];
 
-		//CHARGEMENT DE SCENARIO
-
-		if(nbJoueur == 0)
-		{
-			//Plateau.chargement = true;
-			try
-			{
-				do
-				{
-					fichier = new File( "./Scenario/"+Ihm.chargerScenario()+".data");
-				}while(!fichier.exists());
-
-				Scanner sc = new Scanner( fichier );
-				String[] composant = new String[5];
-				int x;
-				int y;
-				char orientation;
-				String couleur;
-
-				while ( sc.hasNext() )
-				{
-					ligne = sc.nextLine();
-					composant = ligne.split(":");
-					if(!composant[0].equals("init")) break;
-
-					if(composant[2].equals("1")) nbJoueurScenario++;
-					x = Integer.valueOf(composant[3]);
-					y = Integer.valueOf(composant[4]);
-					orientation = composant[composant.length-1].charAt(0);
-					couleur = composant[1];
-					this.ensRobot.add((Robot)(Plateau.tabTuile[x][y] = new Robot("Robot",x,y,couleur,orientation)));
-				}
-				sc.close();
-			}
-			catch (Exception e) {e.printStackTrace(); }
-			this.initJoueur(nbJoueurScenario);
-			this.joueurActif = Plateau.ensJoueur[0];
-
-		}
-
 		//CHARGEMENT NORMAL
 
 		try
@@ -273,6 +235,46 @@ public class Plateau
 			sc.close();
 		}
 		catch(Exception e) { e.printStackTrace(); }
+
+		//CHARGEMENT DE SCENARIO
+
+		if(nbJoueur == 0)
+		{
+			Plateau.chargement = true;
+			try
+			{
+				do
+				{
+					fichier = new File( "./Scenario/"+Ihm.chargerScenario()+".data");
+				}while(!fichier.exists());
+
+				Scanner sc = new Scanner( fichier );
+				String[] composant = new String[5];
+				int x;
+				int y;
+				char orientation;
+				String couleur;
+
+				while ( sc.hasNext() )
+				{
+					ligne = sc.nextLine();
+					composant = ligne.split(":");
+					if(!composant[0].equals("init")) break;
+
+					if(composant[2].equals("1")) nbJoueurScenario++;
+					x = Integer.valueOf(composant[3]);
+					y = Integer.valueOf(composant[4]);
+					orientation = composant[composant.length-1].charAt(0);
+					couleur = composant[1];
+					this.ensRobot.add((Robot)(Plateau.tabTuile[x][y] = new Robot("Robot",x,y,couleur,orientation)));
+				}
+				sc.close();
+			}
+			catch (Exception e) {e.printStackTrace(); }
+			this.initJoueur(nbJoueurScenario);
+			this.joueurActif = Plateau.ensJoueur[0];
+
+		}
 		nbJoueur = nbJoueurScenario;
 
 		for(int i = 0; i < Plateau.ensJoueur.length; i++)
