@@ -15,19 +15,20 @@ public class Plateau
 	private static int       nbJoueur;
 	private static int       largeurMax;
 	private static int       hauteurMax;
+	private static int       nbCristaux = 8;
+	private static Gemme[]   tabCristal = new Gemme[8];
+	private static boolean   premierTour = true;
 
 	private final  int       NB_POINTS_REQUIS = 11; //point requis pour 2 joueurs qui est la base de calcul de victoire
 
 
 	private  Controleur       ctrl;
-	private  int              nbCristaux;
 	private  Joueur           joueurActif;
 	private  ArrayList<Robot> ensRobot;
 	private  ArrayList<Base>  ensBase;
 
-	private Gemme critalVert   = new Gemme("Gemme", 0, 0, "Vert"  );
-	private Gemme critalViolet = new Gemme("Gemme", 0, 0, "Violet");
-	public static Gemme[] tabCristal = new Gemme[8];
+	private Gemme critalVert   = new Gemme("Gemme", 0, 0, "vert"  );
+	private Gemme critalViolet = new Gemme("Gemme", 0, 0, "mauve");
 
 
 	public Plateau(Controleur ctrl, int nbJoueur)
@@ -40,16 +41,29 @@ public class Plateau
 		this.initJoueur(Plateau.nbJoueur);
 		this.joueurActif = Plateau.ensJoueur[this.ctrl.premierJoueur(Plateau.ensJoueur)];
 		this.initPlateau(nbJoueur);
-		this.setPisteCristaux();
+		this.initPisteCristaux();
 	}
 
-	public void setPisteCristaux()
+	public void initPisteCristaux()
 	{
 		for(int i=0; i<tabCristal.length; i++)
 			if(i<4)
 				tabCristal[i] = this.critalVert;
 			else
 				tabCristal[i] = this.critalViolet;
+	}
+
+	public static Gemme enleverCristal()
+	{
+		Gemme gemme = tabCristal[tabCristal.length - nbCristaux];
+		tabCristal[tabCristal.length - nbCristaux] = null;
+		nbCristaux--;
+		return gemme;
+	}
+
+	public static Gemme getCristal(int num)
+	{
+		return Plateau.tabCristal[num];
 	}
 
 	public static Tuile  getTuile (int x, int y)
@@ -59,7 +73,7 @@ public class Plateau
 
 		return Plateau.tabTuile[x][y];
 	}
-	                                                                                         //Méthodes static utilisées pour modifier le tableau
+	                                                                                         //M�thodes static utilis�es pour modifier le tableau
 	public static Joueur getJoueur(int i)                     { return Plateau.ensJoueur[i];    } //et pour avoir des informations sur les joueurs
 	public static int    getLargeurMax()		                  { return Plateau.largeurMax;      }
 	public static int    getHauteurMax()		                  { return Plateau.hauteurMax;      }
@@ -72,7 +86,7 @@ public class Plateau
 		while(!this.gagne())
 		{
 			this.ctrl.afficherPlateau(Plateau.tabTuile);
-			this.ctrl.afficherChoix();
+			this.ctrl.afficherChoix(Plateau.premierTour);
 			this.joueurActif.actionsRobots(); //Lance les 3 actions des 2 robots
 			this.JoueurSuivant();
 		}
@@ -170,7 +184,7 @@ public class Plateau
 					if (composant[i].charAt(1) == 'V') this.ensRobot.add((Robot)(Plateau.tabTuile[hauteur][largeur] = new Robot("Robot", hauteur, largeur, "vert" ,composant[i].charAt(2))));
 					if (composant[i].charAt(1) == 'B') this.ensRobot.add((Robot)(Plateau.tabTuile[hauteur][largeur] = new Robot("Robot", hauteur, largeur, "bleu" ,composant[i].charAt(2))));
 					if (composant[i].charAt(1) == 'M') this.ensRobot.add((Robot)(Plateau.tabTuile[hauteur][largeur] = new Robot("Robot", hauteur, largeur, "mauve",composant[i].charAt(2))));
-					if (composant[i].charAt(1) == 'S') this.ensRobot.add((Robot)(Plateau.tabTuile[hauteur][largeur] = new Robot("Robot", hauteur, largeur, "cyan" ,composant[i].charAt(2))));
+					if (composant[i].charAt(1) == 'C') this.ensRobot.add((Robot)(Plateau.tabTuile[hauteur][largeur] = new Robot("Robot", hauteur, largeur, "cyan" ,composant[i].charAt(2))));
 					//Base
 					if (composant[i].charAt(1) == '1') this.ensBase.add((Base)(Plateau.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "rouge")));
 					if (composant[i].charAt(1) == '2') this.ensBase.add((Base)(Plateau.tabTuile[hauteur][largeur] = new Base("Base", hauteur, largeur, "jaune")));

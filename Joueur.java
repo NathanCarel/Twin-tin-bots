@@ -1,13 +1,13 @@
 public class Joueur
 {
 	private static final String[] tabCouleurs = new String[] {"rouge", "jaune", "vert", "bleu", "mauve", "cyan"};
-	private static int nbJoueurs;
+	private static       int      nbJoueurs;
 
 	private Robot[] tabRobot = new Robot[2];
-	private int   nbPoints;
-	private Base  base;
+	private int     nbPoints;
+	private Base    base;
 	private Ordre[] stockOrdre;
-	private String couleur;
+	private String  couleur;
 
 	public Joueur()
 	{
@@ -15,7 +15,7 @@ public class Joueur
 		this.tabRobot[0] = new Robot("null", 0, 0, "null", 'a');
 		this.tabRobot[1] = new Robot("null", 0, 0, "null", 'a');
 
-		this.stockOrdre = new Ordre[6];
+		this.stockOrdre  = new Ordre[6];
 
 		for (int i=0 ; i<6 ; i++)
 			this.stockOrdre[i] = new Ordre (enumOrdre.values()[i]);
@@ -23,12 +23,12 @@ public class Joueur
 		this.couleur = Joueur.tabCouleurs[Joueur.nbJoueurs++];
 	}
 
-	public Robot  getRobot(int i)  { return this.tabRobot[i-1]; }
-	public int    getNbPoints()    { return this.nbPoints;      }
-	public Base   getBase()        { return this.base;          }
-	public Ordre  getOrdre(int i)  { return this.stockOrdre[i]; }
-	public Ordre[] getStockOrdre() { return this.stockOrdre;    }
-	public String getCouleur()     { return this.couleur;       }
+	public Robot   getRobot(int i)  { return this.tabRobot[i-1]; }
+	public int     getNbPoints()    { return this.nbPoints;      }
+	public Base    getBase()        { return this.base;          }
+	public Ordre   getOrdre(int i)  { return this.stockOrdre[i]; }
+	public Ordre[] getStockOrdre()  { return this.stockOrdre;    }
+	public String  getCouleur()     { return this.couleur;       }
 
 	public void setNbPoints(int i) { this.nbPoints = i; }
 
@@ -48,5 +48,4 @@ public class Joueur
 		this.tabRobot[0].faireActions();
 		this.tabRobot[1].faireActions();
 	}
-
 }

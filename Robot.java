@@ -74,7 +74,10 @@ public class Robot extends Tuile
 			{
 				boolean poussable  = false;
 				Tuile tuileEnFace  = Plateau.getTuile(tempPosX, tempPosY);
-				Tuile tuileEnFace2 = Plateau.getTuile(tempPosX + xPlus2, tempPosY + yPlus2);
+				Tuile tuileEnFace2 = null;
+
+				try {tuileEnFace2 = Plateau.getTuile(tempPosX + xPlus2, tempPosY + yPlus2);}
+				catch (ArrayIndexOutOfBoundsException e) {}
 
 				if ( tuileEnFace2 != null && tuileEnFace2.getType() == "Tuile" ) {poussable = true;}
 
@@ -93,7 +96,7 @@ public class Robot extends Tuile
 						}
 
 						if ( tuileEnFace.getType() == "Gemme" && poussable )
-							Plateau.setTuile((Gemme)(tuileEnFace), tempPosX + xPlus2, tempPosY + yPlus2);
+						Plateau.setTuile((Gemme)(tuileEnFace), tempPosX + xPlus2, tempPosY + yPlus2);
 
 						Plateau.setTuile(this, this.posX, this.posY);
 					}
@@ -136,7 +139,7 @@ public class Robot extends Tuile
 
 		Tuile tuileEnFace = Plateau.getTuile(posCristX, posCristY);
 
-		if (tuileEnFace != null)
+		if (tuileEnFace != null && this.gemme == null)
 		{
 			if ( tuileEnFace.getType().equals("Gemme") )
 			{
@@ -149,29 +152,6 @@ public class Robot extends Tuile
 			if ( tuileEnFace.getType().equals("Robot") )
 			{
 				Robot robotEnFace = (Robot)(tuileEnFace);
-// if(this.numRobot == 0)      {return "\033[0;31m"+this.orientationAffichage+"\033[0m";} //7 surligner et 4 souligner
-        // else if (this.gemme != null){return "\033[7;31m"+this.orientationAffichage+"\033[0m";}
-        // else                        {return "\033[4;31m"+this.orientationAffichage+"\033[0m";}
-        // if( this.couleur.equals("jaune" ))
-        // if(this.numRobot == 0)      {return "\033[0;33m"+this.orientationAffichage+"\033[0m";}
-        // else if (this.gemme != null){return "\033[7;33m"+this.orientationAffichage+"\033[0m";}
-        // else                        {return "\033[4;33m"+this.orientationAffichage+"\033[0m";}
-        // if( this.couleur.equals("vert"  ))
-        // if(this.numRobot == 0)      {return "\033[0;32m"+this.orientationAffichage+"\033[0m";}
-        // else if (this.gemme != null){return "\033[7;32m"+this.orientationAffichage+"\033[0m";}
-        // else                        {return "\033[4;32m"+this.orientationAffichage+"\033[0m";}
-        // if( this.couleur.equals("bleu"  ))
-        // if(this.numRobot == 0)      {return "\033[0;34m"+this.orientationAffichage+"\033[0m";}
-        // else if (this.gemme != null){return "\033[7;34m"+this.orientationAffichage+"\033[0m";}
-        // else                        {return "\033[4;34m"+this.orientationAffichage+"\033[0m";}
-        // if( this.couleur.equals("violet"))
-        // if(this.numRobot == 0)      {return "\033[0;35m"+this.orientationAffichage+"\033[0m";}
-        // else if (this.gemme != null){return "\033[7;35m"+this.orientationAffichage+"\033[0m";}
-        // else                        {return "\033[4;35m"+this.orientationAffichage+"\033[0m";}
-        // if( this.couleur.equals("cyan"  ))
-        // if(this.numRobot == 0)      {return "\033[0;36m"+this.orientationAffichage+"\033[0m";}
-        // else if (this.gemme != null){return "\033[7;31m"+this.orientationAffichage+"\033[0m";}
-        // else                        {return "\033[4;36m"+this.orientationAffichage+"\033[0m";}
 				if (robotEnFace.getGemme() != null)
 				{
 					this.setGemme (robotEnFace.getGemme());
@@ -213,7 +193,7 @@ public class Robot extends Tuile
 				{ robotEnFace.setGemme(this.getGemme()); }
 			}
 
-			if ( tuileEnFace.getType() == "Base" ) //Condition non testée
+			if ( tuileEnFace.getType() == "Base" )
 			{
 				for (int i=0; i<Plateau.getNbJoueur(); i++)
 				{
@@ -223,15 +203,11 @@ public class Robot extends Tuile
 					{
 						int gain;
 
-						switch (this.getGemme().getCouleur())
-						{
-							case "bleu": gain = 2; break;
-							case "vert": gain = 3; break;
-							case "rose": gain = 4; break;
-							default: gain = 0; break;
-						}
+						gain = this.getGemme().getGain();
 
 						Plateau.getJoueur(i).setNbPoints( Plateau.getJoueur(i).getNbPoints() + gain );
+						Plateau.setTuile((Gemme)Plateau.enleverCristal(), (Plateau.getLargeurMax()-1)/2, (Plateau.getHauteurMax()-1)/2);
+
 					}
 				}
 
@@ -251,7 +227,7 @@ public class Robot extends Tuile
 			if (this.tabOrdre[i].getType().equals("Tourner à gauche")) { this.tourner(-1);      }
 			if (this.tabOrdre[i].getType().equals("Tourner à droite")) { this.tourner(1);       }
 			if (this.tabOrdre[i].getType().equals("Charger cristal" )) { this.prendreCristal(); }
-      if (this.tabOrdre[i].getType().equals("Deposer cristal" )) { this.deposerCristal(); }
+			if (this.tabOrdre[i].getType().equals("Deposer cristal" )) { this.deposerCristal(); }
 		}
 	}
 
@@ -259,67 +235,16 @@ public class Robot extends Tuile
 	public String getCouleur() { return this.couleur; }
 
 	public String toString()
-    {
-      if( this.couleur.equals("rouge" ))
-			{
-      	if(this.numRobot == 0)     //7 surligner et 4 souligner
-				{
-					if (this.gemme != null) {return "\033[7;31m"+this.orientationAffichage+"\033[0m";}
-      		else                    {return "\033[0;31m"+this.orientationAffichage+"\033[0m";}
-				}
-				else {return "\033[4;31m"+this.orientationAffichage+"\033[0m";}
-			}
-
-			if( this.couleur.equals("jaune" ))
-			{
-				if(this.numRobot == 0)     //7 surligner et 4 souligner
-				{
-					if (this.gemme != null) {return "\033[7;33m"+this.orientationAffichage+"\033[0m";}
-					else                    {return "\033[0;33m"+this.orientationAffichage+"\033[0m";}
-				}
-				else {return "\033[4;33m"+this.orientationAffichage+"\033[0m";}
-			}
-
-			if( this.couleur.equals("vert"  ))
-			{
-				if(this.numRobot == 0)     //7 surligner et 4 souligner
-				{
-					if (this.gemme != null) {return "\033[7;32m"+this.orientationAffichage+"\033[0m";}
-					else                    {return "\033[0;32m"+this.orientationAffichage+"\033[0m";}
-				}
-				else {return "\033[4;32m"+this.orientationAffichage+"\033[0m";}
-			}
-
-      if( this.couleur.equals("bleu"  ))
-			{
-				if(this.numRobot == 0)     //7 surligner et 4 souligner
-				{
-					if (this.gemme != null) {return "\033[7;34m"+this.orientationAffichage+"\033[0m";}
-					else                    {return "\033[0;34m"+this.orientationAffichage+"\033[0m";}
-				}
-				else {return "\033[4;34m"+this.orientationAffichage+"\033[0m";}
-			}
-
-      if( this.couleur.equals("violet"))
-			{
-				if(this.numRobot == 0)     //7 surligner et 4 souligner
-				{
-					if (this.gemme != null) {return "\033[7;31m"+this.orientationAffichage+"\033[0m";}
-					else                    {return "\033[0;31m"+this.orientationAffichage+"\033[0m";}
-				}
-				else {return "\033[4;31m"+this.orientationAffichage+"\033[0m";}
-			}
-
-      if( this.couleur.equals("cyan"  ))
-			{
-				if(this.numRobot == 0)     //7 surligner et 4 souligner
-				{
-					if (this.gemme != null) {return "\033[7;36m"+this.orientationAffichage+"\033[0m";}
-					else                    {return "\033[0;36m"+this.orientationAffichage+"\033[0m";}
-				}
-				else {return "\033[4;36m"+this.orientationAffichage+"\033[0m";}
-			}
-
-    	return "" + this.orientationAffichage;
-    }
+	{
+		if(this.numRobot == 0)
+		{
+			if (this.gemme != null) {return Utils.couleur(this.couleur,"surligne", ""+this.orientationAffichage);}
+			else                    {return Utils.couleur(this.couleur,"normal", ""+this.orientationAffichage);  }
+		}
+		else
+		{
+			if (this.gemme != null) {return Utils.couleur(this.couleur,"souligne-surligne", ""+this.orientationAffichage);}
+			else                    {return Utils.couleur(this.couleur,"souligne", ""+this.orientationAffichage);         }
+		}
+	}
 }

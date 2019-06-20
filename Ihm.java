@@ -9,7 +9,9 @@ import iut.algo.*;
 
 public class Ihm
 {
-	private Controleur ctrl;
+	private static int        numOrdre;
+	private static boolean    premierTour;
+	private        Controleur ctrl;
 
 	public Ihm(Controleur ctrl)
 	{
@@ -61,21 +63,29 @@ public class Ihm
 	}
 
 
-	public void afficherChoix()
+	public void afficherChoix(boolean premierTour)
 	{
+		String couleur = this.ctrl.getPlateau().getJoueurActif().getCouleur();
+		String resultat;
+		char   choix = 0;
+		Ihm.premierTour = premierTour;
+
 		this.affichertabOrdre();
 		System.out.println("Vous avez " + this.ctrl.getPlateau().getJoueurActif().getNbPoints() + " points\n" );
-		System.out.println( "\nJoueur " + this.ctrl.getPlateau().getJoueurActif().getCouleur() + " que voulez-vous faire :\n");
+		System.out.println( "\nJoueur " + Utils.couleur(couleur,"normal",couleur) + " que voulez-vous faire :\n");
 		System.out.println("[1] : Changer le programme du robot 1");
 		System.out.println("[2] : Changer le programme du robot 2");
 		System.out.println("[P]asser");
 
-		char choix = Clavier.lireString().toUpperCase().charAt(0);
+		resultat = Clavier.lireString().toUpperCase();
+		if(!resultat.equals("")) choix = resultat.charAt(0);
 
-		while (choix != '1' && choix != '2' && choix != 'P')
+		while (choix != '1' && choix != '2' && (choix != 'P' || premierTour))
 		{
-			System.out.println("Choix incorrect !");
-			choix = Clavier.lireString().toUpperCase().charAt(0);
+			if(premierTour) System.out.println("Erreur premier tour");
+			else            System.out.println("Choix incorrect !");
+			resultat = Clavier.lireString().toUpperCase();
+			if(!resultat.equals("")) choix = resultat.charAt(0);
 		}
 
 		switch (choix)
@@ -98,17 +108,16 @@ public class Ihm
 		System.out.println("[E]changer deux actions"        );
 		System.out.println("[R]etirer une action"           );
 		System.out.println("[V]ider les 3 actions"          );
-		System.out.println("[N]e rien faire"                );
+		System.out.println("[P]recedent"                    );
 
 		char action = Clavier.lireString().toUpperCase().charAt(0);
 
-		while (action != 'A' && action != 'E' && action != 'R' && action != 'V' && action != 'N')
+		while (action != 'A' && action != 'E' && action != 'R' && action != 'V' && action != 'P')
 		{
 			System.out.println("Lettre incorrecte !\n");
 			action = Clavier.lireString().toUpperCase().charAt(0);
 		}
 
-		int numOrdre      = 0;
 		int positionOrdre = 0;
 
 
@@ -126,21 +135,22 @@ public class Ihm
 			System.out.println(String.format("%-23s", "[" + (i+1) + " ] - " + jActuel.getOrdre(i).getType()) +  " (" + jActuel.getOrdre(i).getNbExemplaires() + ") "); //Affiche tous les ordres
 
 			System.out.println("[10] - Annuler");
-			numOrdre = Clavier.lire_int()-1;
+			Ihm.numOrdre = Clavier.lire_int()-1;
 
-			if(numOrdre == 9) { this.afficherAction(numRobot); break; }
-			while ( (numOrdre < 0 || numOrdre > 5) || jActuel.getOrdre(numOrdre).getNbExemplaires() <= 0)
+			if(Ihm.numOrdre == 9) { this.afficherChoix(Ihm.premierTour);}
+
+			while (!this.verifStock(jActuel, Ihm.numOrdre))
 			{
-				if(jActuel.getOrdre(numOrdre).getNbExemplaires() <= 0) { System.out.println("Carte déja toutes utilisées");}
-				else                                                   { System.out.println("Numéro incorrect");           }
-				numOrdre = Clavier.lire_int()-1;
-				if(numOrdre == 9) { this.afficherAction(numRobot); break; }
+				System.out.println("Ordre déja tous utilisés");
+				Ihm.numOrdre = Clavier.lire_int()-1;
+				if(Ihm.numOrdre == 9) { this.afficherChoix(Ihm.premierTour); break; }
 			}
-			if(numOrdre > 8) { break; }
+			if(Ihm.numOrdre > 7) { break; }
+
 			if (!jActuel.getOrdre(positionOrdre).getType().equals(enumOrdre.AUCUN.getType()))
 			{ modifStockJoueur(jActuel, robot, 1, positionOrdre); }
 
-			robot.setOrdre( new Ordre (enumOrdre.values()[numOrdre]), positionOrdre);
+			robot.setOrdre( new Ordre (enumOrdre.values()[Ihm.numOrdre]), positionOrdre);
 			modifStockJoueur(jActuel, robot, -1, positionOrdre);
 
 			this.affichertabOrdre();
@@ -187,7 +197,7 @@ public class Ihm
 			this.affichertabOrdre();
 			break;
 
-			case 'P' : break;
+			case 'P' : this.afficherChoix(Ihm.premierTour);break;
 		}
 	}
 
@@ -206,13 +216,28 @@ public class Ihm
 
 		Joueur jActuel = this.ctrl.getPlateau().getJoueurActif();
 		String ordre = "";
+		String gemmePossedee  = "";
+		String gemmePossedee2 = "";
+
+
+		if( jActuel.getRobot(1).getGemme() != null)
+		{
+			gemmePossedee = " possède une gemme " + Utils.couleur(jActuel.getRobot(1).getGemme().getCouleur(),"normal",jActuel.getRobot(1).getGemme().getCouleur());
+			gemmePossedee += "(" + jActuel.getRobot(1).getGemme().getGain() + ")";
+		}
+
+		if(jActuel.getRobot(2).getGemme() != null)
+		{
+			gemmePossedee2 = " possède une gemme " + Utils.couleur(jActuel.getRobot(2).getGemme().getCouleur(),"normal",jActuel.getRobot(2).getGemme().getCouleur());
+			gemmePossedee2 += "(" + jActuel.getRobot(2).getGemme().getGain() + ")";
+		}
 
 		System.out.print("+---------------------------------------------------------+");
 		System.out.print(String.format("%-3s", " ")+"+---------------------------------------------------------+\n");
-		System.out.print(String.format("%-58s",("| Robot " + jActuel.getCouleur())) +                        "|   ");
-		System.out.print(String.format("%-65s",("| \033[4mRobot " + jActuel.getCouleur()) + "\033[0m") +     " |\n");
-		System.out.print("+---------------------------------------------------------+");
-		System.out.print(String.format("%-3s", " ")+"+---------------------------------------------------------+\n");
+		System.out.print(String.format("%-69s",("| " + Utils.couleur(jActuel.getCouleur(),"normal","Robot "+jActuel.getCouleur()) + gemmePossedee)) + "|   ");
+		System.out.print(String.format("%-69s",("| " + Utils.couleur(jActuel.getCouleur(),"souligne","Robot "+jActuel.getCouleur()) + gemmePossedee2)) +"|\n");
+		System.out.print("+------------------+------------------+-------------------+");
+		System.out.print(String.format("%-3s", " ")+"+------------------+------------------+-------------------+\n");
 
 		for (int i = 1; i < 3; i++)
 		{
@@ -226,8 +251,8 @@ public class Ihm
 
 			System.out.print(String.format("%-5s"," | "));
 		}
-		System.out.print("\n+---------------------------------------------------------+");
-		System.out.print(String.format("%-3s", " ")+"+---------------------------------------------------------+\n");
+		System.out.print("\n+------------------+------------------+-------------------+");
+		System.out.print(String.format("%-3s", " ")+"+------------------+------------------+-------------------+\n");
 	}
 
 	public void afficherNbAction(char nomAction, Robot robot)
@@ -249,6 +274,17 @@ public class Ihm
 			case 'R' : return "Quelle action voulez-vous retirer ?"   ;
 		}
 		return "";
+	}
+
+	public boolean verifStock(Joueur jActuel, int numOrdre)
+	{
+		while ( (Ihm.numOrdre < 0 || Ihm.numOrdre > 5) )
+		{
+			System.out.println("Numéro incorrect");
+			Ihm.numOrdre = Clavier.lire_int()-1;
+			if(Ihm.numOrdre == 9) { this.afficherChoix(Ihm.premierTour); break;}
+		}
+		return(jActuel.getOrdre(Ihm.numOrdre).getNbExemplaires() > 0);
 	}
 
 	public void afficherPlateau(Tuile[][] tabTuiles)
@@ -332,6 +368,16 @@ public class Ihm
 			if (tabTuiles[tabTuiles.length - 1][j] != null) { chaine += "+---"; }
 			else                                            { chaine += "    "; }
 		}
+		chaine += "\n +---+---+---+---+---+---+---+---+\n";
+        for(int l=0; l<8; l++)
+        {
+					chaine += " | ";
+					if (Plateau.getCristal(l) == null) { chaine += " ";                   }
+					else                               { chaine += Plateau.getCristal(l); }
+				}
+
+        chaine += " |\n +---+---+---+---+---+---+---+---+\n";
+
 		System.out.println(chaine);
 	}
 }

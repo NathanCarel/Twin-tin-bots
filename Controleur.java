@@ -30,9 +30,9 @@ public class Controleur
 		 Controleur.ihm.afficherPlateau(tabTuiles);
 	}
 
-	public void afficherChoix()
+	public void afficherChoix(boolean premierTour)
 	{
-		Controleur.ihm.afficherChoix();
+		Controleur.ihm.afficherChoix(premierTour);
 	}
 
 	public int initNbJoueur()
