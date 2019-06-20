@@ -1,7 +1,7 @@
 /*
-	Projet_tut
-	@author Tristan Bassa
-	17/06/2019
+Projet_tut
+@author Tristan Bassa
+17/06/2019
 */
 
 import java.util.*;
@@ -63,20 +63,20 @@ public class Ihm
 
 	public void afficherChoix()
 	{
-        this.affichertabOrdre();
-
+		this.affichertabOrdre();
+		System.out.println("Vous avez " + this.ctrl.getPlateau().getJoueurActif().getNbPoints() + " points\n" );
 		System.out.println( "\nJoueur " + this.ctrl.getPlateau().getJoueurActif().getCouleur() + " que voulez-vous faire :\n");
 		System.out.println("[1] : Changer le programme du robot 1");
 		System.out.println("[2] : Changer le programme du robot 2");
-		System.out.println("[P] : Passer");
+		System.out.println("[P]asser");
 
 		char choix = Clavier.lireString().toUpperCase().charAt(0);
 
-        while (choix != '1' && choix != '2' && choix != 'P')
-        {
-            System.out.println("Choix incorrect !");
-            choix = Clavier.lireString().toUpperCase().charAt(0);
-        }
+		while (choix != '1' && choix != '2' && choix != 'P')
+		{
+			System.out.println("Choix incorrect !");
+			choix = Clavier.lireString().toUpperCase().charAt(0);
+		}
 
 		switch (choix)
 		{
@@ -102,11 +102,11 @@ public class Ihm
 
 		char action = Clavier.lireString().toUpperCase().charAt(0);
 
-        while (action != 'A' && action != 'E' && action != 'R' && action != 'V' && action != 'N')
-        {
-            System.out.println("Lettre incorrecte !\n");
-            action = Clavier.lireString().toUpperCase().charAt(0);
-        }
+		while (action != 'A' && action != 'E' && action != 'R' && action != 'V' && action != 'N')
+		{
+			System.out.println("Lettre incorrecte !\n");
+			action = Clavier.lireString().toUpperCase().charAt(0);
+		}
 
 		int numOrdre      = 0;
 		int positionOrdre = 0;
@@ -116,72 +116,76 @@ public class Ihm
 		{
 			case 'A' :  this.afficherNbAction('A', robot);
 
-						do
-						{ positionOrdre = Clavier.lire_int()-1; } 
-						while (positionOrdre < 0 || positionOrdre > 2);
+			do
+			{ positionOrdre = Clavier.lire_int()-1; }
+			while (positionOrdre < 0 || positionOrdre > 2);
 
-						System.out.println("\nChoisissez un ordre:\n");
+			System.out.println("\nChoisissez un ordre:\n");
 
-						for (int i=0; i<6; i++)
-							System.out.println(String.format("%-23s", "[" + (i+1) + "] - " + jActuel.getOrdre(i).getType()) +  " (" + jActuel.getOrdre(i).getNbExemplaires() + ") "); //Affiche tous les ordres
+			for (int i=0; i<6; i++)
+			System.out.println(String.format("%-23s", "[" + (i+1) + " ] - " + jActuel.getOrdre(i).getType()) +  " (" + jActuel.getOrdre(i).getNbExemplaires() + ") "); //Affiche tous les ordres
 
-						numOrdre = Clavier.lire_int()-1;
+			System.out.println("[10] - Annuler");
+			numOrdre = Clavier.lire_int()-1;
 
-						while ( (numOrdre < 0 || numOrdre > 5) || jActuel.getOrdre(numOrdre).getNbExemplaires() <= 0)
-						{
-							System.out.println("Numéro incorrect");
-							numOrdre = Clavier.lire_int()-1;
-						}
+			if(numOrdre == 9) { this.afficherAction(numRobot); break; }
+			while ( (numOrdre < 0 || numOrdre > 5) || jActuel.getOrdre(numOrdre).getNbExemplaires() <= 0)
+			{
+				if(jActuel.getOrdre(numOrdre).getNbExemplaires() <= 0) { System.out.println("Carte déja toutes utilisées");}
+				else                                                   { System.out.println("Numéro incorrect");           }
+				numOrdre = Clavier.lire_int()-1;
+				if(numOrdre == 9) { this.afficherAction(numRobot); break; }
+			}
+			if(numOrdre > 8) { break; }
+			if (!jActuel.getOrdre(positionOrdre).getType().equals(enumOrdre.AUCUN.getType()))
+			{ modifStockJoueur(jActuel, robot, 1, positionOrdre); }
 
-					    if (!jActuel.getOrdre(positionOrdre).getType().equals(enumOrdre.AUCUN.getType()))
-					    { modifStockJoueur(jActuel, robot, 1, positionOrdre); }
+			robot.setOrdre( new Ordre (enumOrdre.values()[numOrdre]), positionOrdre);
+			modifStockJoueur(jActuel, robot, -1, positionOrdre);
 
-					    robot.setOrdre( new Ordre (enumOrdre.values()[numOrdre]), positionOrdre);
-					    modifStockJoueur(jActuel, robot, -1, positionOrdre);
+			this.affichertabOrdre();
 
-					    this.affichertabOrdre();
-
-					    break;
+			break;
 
 
 			case 'E' :  this.afficherNbAction('E', robot);
-						int ordre1 = 0; int ordre2 = 0;
+			int ordre1 = 0; int ordre2 = 0;
 
-					    do
-                        {
-                        	System.out.print("Premier ordre à échanger: ");
-                            ordre1 = Clavier.lire_int() - 1;
-                            System.out.print("Second ordre à échanger : ");
-                            ordre2 = Clavier.lire_int() - 1;
-                        } while((ordre1 < 1 || ordre1 > 3) && (ordre2 < 1 || ordre2 > 3));
+			do
+			{
+				System.out.print("Premier ordre à échanger: ");
+				ordre1 = Clavier.lire_int() - 1;
+				System.out.print("Second ordre à échanger : ");
+				ordre2 = Clavier.lire_int() - 1;
+			} while((ordre1 < 1 || ordre1 > 3) && (ordre2 < 1 || ordre2 > 3));
 
-					    robot.echangerOrdre(ordre1, ordre2);
-					    this.affichertabOrdre();
-					    break;
- 
+			robot.echangerOrdre(ordre1, ordre2);
+			this.affichertabOrdre();
+			break;
+
 
 			case 'R' :  this.affichertabOrdre();
-						this.afficherNbAction('R', robot);
+			this.afficherNbAction('R', robot);
 
-						do
-						{ positionOrdre = Clavier.lire_int()-1; }
-						while (positionOrdre < 0 || positionOrdre > 2);
+			do
+			{ positionOrdre = Clavier.lire_int()-1; }
+			while (positionOrdre < 0 || positionOrdre > 2);
 
-						modifStockJoueur(jActuel, robot, 1, positionOrdre);
+			modifStockJoueur(jActuel, robot, 1, positionOrdre);
 
-						robot.setOrdre(new Ordre (enumOrdre.AUCUN), positionOrdre);
-					    this.affichertabOrdre();
-					    break;
+			robot.setOrdre(new Ordre (enumOrdre.AUCUN), positionOrdre);
+			this.affichertabOrdre();
+			break;
 
 
 			case 'V' :	this.affichertabOrdre();
-						for (int i=0; i<3; i++)
-						{
-							modifStockJoueur(jActuel, robot, 1, i);
-							robot.setOrdre(new Ordre (enumOrdre.AUCUN), i);
-						}
-			          	this.affichertabOrdre();
-			        	break;
+			for (int i=0; i<3; i++)
+			{
+				modifStockJoueur(jActuel, robot, 1, i);
+				robot.setOrdre(new Ordre (enumOrdre.AUCUN), i);
+			}
+			this.affichertabOrdre();
+			break;
 
 			case 'P' : break;
 		}
@@ -190,23 +194,23 @@ public class Ihm
 	public void modifStockJoueur(Joueur jActuel, Robot robot, int choix, int positionOrdre) //A mettre dans Joueur (pour MVC)
 	{
 		for (int o=0; o<jActuel.getStockOrdre().length; o++)
-			if (robot.getOrdre(positionOrdre).getType().equals(jActuel.getOrdre(o).getType()))
-			{
-				if (choix == 1)  jActuel.getOrdre(o).ajouter();
-				if (choix == -1) jActuel.getOrdre(o).retirer();
-			}
+		if (robot.getOrdre(positionOrdre).getType().equals(jActuel.getOrdre(o).getType()))
+		{
+			if (choix == 1)  jActuel.getOrdre(o).ajouter();
+			if (choix == -1) jActuel.getOrdre(o).retirer();
+		}
 	}
 
 	public void affichertabOrdre()
 	{
-		
+
 		Joueur jActuel = this.ctrl.getPlateau().getJoueurActif();
 		String ordre = "";
 
 		System.out.print("+---------------------------------------------------------+");
 		System.out.print(String.format("%-3s", " ")+"+---------------------------------------------------------+\n");
-		System.out.print(String.format("%-58s",("| Robot " + jActuel.getCouleur()))+ "|   ");
-		System.out.print(String.format("%-58s",("| Robot " + jActuel.getCouleur()))+ "|\n");
+		System.out.print(String.format("%-58s",("| Robot " + jActuel.getCouleur())) +                        "|   ");
+		System.out.print(String.format("%-65s",("| \033[4mRobot " + jActuel.getCouleur()) + "\033[0m") +     " |\n");
 		System.out.print("+---------------------------------------------------------+");
 		System.out.print(String.format("%-3s", " ")+"+---------------------------------------------------------+\n");
 
@@ -228,7 +232,7 @@ public class Ihm
 
 	public void afficherNbAction(char nomAction, Robot robot)
 	{
-		System.out.println("\n" + this.getNomAction(nomAction) + "\n"); 
+		System.out.println("\n" + this.getNomAction(nomAction) + "\n");
 		System.out.println("[1]  : " + robot.getOrdre(0) );
 		System.out.println("[2]  : " + robot.getOrdre(1) );
 		System.out.println("[3]  : " + robot.getOrdre(2) );
@@ -269,10 +273,10 @@ public class Ihm
 						test = false;
 					}
 					if (test)
-						if (tabTuiles[i][j] != null)
-							chaine += "+---";
-						else
-							chaine += "    ";
+					if (tabTuiles[i][j] != null)
+					chaine += "+---";
+					else
+					chaine += "    ";
 				}
 				if (i > tabTuiles.length / 2) {
 					if (j > 1 && tabTuiles[i - 1][j - 1] != null && tabTuiles[i - 1][j] == null)
@@ -286,10 +290,10 @@ public class Ihm
 						test = false;
 					}
 					if (test)
-						if (i > 1 && tabTuiles[i - 1][j] != null)
-							chaine += "+---";
-						else
-							chaine += "    ";
+					if (i > 1 && tabTuiles[i - 1][j] != null)
+					chaine += "+---";
+					else
+					chaine += "    ";
 				}
 			}
 
@@ -325,8 +329,8 @@ public class Ihm
 				test = false;
 			}
 			if (test)
-				if (tabTuiles[tabTuiles.length - 1][j] != null) { chaine += "+---"; }
-				else                                            { chaine += "    "; }
+			if (tabTuiles[tabTuiles.length - 1][j] != null) { chaine += "+---"; }
+			else                                            { chaine += "    "; }
 		}
 		System.out.println(chaine);
 	}

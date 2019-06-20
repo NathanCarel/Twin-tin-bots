@@ -38,17 +38,18 @@ public class Plateau
 		this.initPlateau(nbJoueur);
 	}
 
-	public static Tuile  getTuile (int x, int y) 
-	{ 
+	public static Tuile  getTuile (int x, int y)
+	{
 		if (x>Plateau.tabTuile.length || y>Plateau.tabTuile[0].length || x<0 || y<0)
 			return null;
 
 		return Plateau.tabTuile[x][y];
-	}                                                                                             //Méthodes static utilisées pour modifier le tableau
-	public static Joueur getJoueur(int i)        { return Plateau.ensJoueur[i];                 } //et pour avoir des informations sur les joueurs
-	public static int    getLargeurMax()		 { return Plateau.largeurMax;                   }
-	public static int    getHauteurMax()		 { return Plateau.hauteurMax;                   }
-	public static int    getNbJoueur ()          { return Plateau.nbJoueur;                     }
+	}
+	                                                                                         //Méthodes static utilisées pour modifier le tableau
+	public static Joueur getJoueur(int i)                     { return Plateau.ensJoueur[i];    } //et pour avoir des informations sur les joueurs
+	public static int    getLargeurMax()		                  { return Plateau.largeurMax;      }
+	public static int    getHauteurMax()		                  { return Plateau.hauteurMax;      }
+	public static int    getNbJoueur ()                       { return Plateau.nbJoueur;        }
 	public static void   setTuile (Tuile tuile, int x, int y) { Plateau.tabTuile[x][y] = tuile; }
 
 

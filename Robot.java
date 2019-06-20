@@ -1,6 +1,8 @@
 public class Robot extends Tuile
 {
 	private static char[] tabOrientation = new char[] {'N', 'E', 'S', 'O'};
+	private static int num;
+	private int numRobot;
 	private int orientation = 0;
 	private char orientationAffichage;
 	private String couleur;
@@ -13,6 +15,8 @@ public class Robot extends Tuile
 		this.orientationAffichage = orientation;
 		this.couleur = couleur;
 		this.tabOrdre = new Ordre[] {new Ordre (enumOrdre.AUCUN), new Ordre (enumOrdre.AUCUN), new Ordre (enumOrdre.AUCUN)};
+		if(Robot.num > 1){ Robot.num = 0;}
+		this.numRobot = Robot.num++;
 
 		switch(orientation)
 		{
@@ -57,7 +61,7 @@ public class Robot extends Tuile
 			int xPlus2 = 0;
 			int yPlus2 = 0;
 
-			
+
 			switch (this.orientation)
 			{
 				case 0: tempPosX--; xPlus2 = -1; break;
@@ -134,7 +138,7 @@ public class Robot extends Tuile
 
 		if (tuileEnFace != null)
 		{
-			if ( tuileEnFace.getType().equals("Gemme") ) 
+			if ( tuileEnFace.getType().equals("Gemme") )
 			{
 				this.setGemme ((Gemme)tuileEnFace);
 				tuileEnFace = new Tuile("Tuile", posCristX, posCristY);
@@ -142,10 +146,32 @@ public class Robot extends Tuile
 				Plateau.setTuile(tuileEnFace, posCristX, posCristY);
 			}
 
-			if ( tuileEnFace.getType().equals("Robot") ) 
+			if ( tuileEnFace.getType().equals("Robot") )
 			{
 				Robot robotEnFace = (Robot)(tuileEnFace);
-
+// if(this.numRobot == 0)      {return "\033[0;31m"+this.orientationAffichage+"\033[0m";} //7 surligner et 4 souligner
+        // else if (this.gemme != null){return "\033[7;31m"+this.orientationAffichage+"\033[0m";}
+        // else                        {return "\033[4;31m"+this.orientationAffichage+"\033[0m";}
+        // if( this.couleur.equals("jaune" ))
+        // if(this.numRobot == 0)      {return "\033[0;33m"+this.orientationAffichage+"\033[0m";}
+        // else if (this.gemme != null){return "\033[7;33m"+this.orientationAffichage+"\033[0m";}
+        // else                        {return "\033[4;33m"+this.orientationAffichage+"\033[0m";}
+        // if( this.couleur.equals("vert"  ))
+        // if(this.numRobot == 0)      {return "\033[0;32m"+this.orientationAffichage+"\033[0m";}
+        // else if (this.gemme != null){return "\033[7;32m"+this.orientationAffichage+"\033[0m";}
+        // else                        {return "\033[4;32m"+this.orientationAffichage+"\033[0m";}
+        // if( this.couleur.equals("bleu"  ))
+        // if(this.numRobot == 0)      {return "\033[0;34m"+this.orientationAffichage+"\033[0m";}
+        // else if (this.gemme != null){return "\033[7;34m"+this.orientationAffichage+"\033[0m";}
+        // else                        {return "\033[4;34m"+this.orientationAffichage+"\033[0m";}
+        // if( this.couleur.equals("violet"))
+        // if(this.numRobot == 0)      {return "\033[0;35m"+this.orientationAffichage+"\033[0m";}
+        // else if (this.gemme != null){return "\033[7;35m"+this.orientationAffichage+"\033[0m";}
+        // else                        {return "\033[4;35m"+this.orientationAffichage+"\033[0m";}
+        // if( this.couleur.equals("cyan"  ))
+        // if(this.numRobot == 0)      {return "\033[0;36m"+this.orientationAffichage+"\033[0m";}
+        // else if (this.gemme != null){return "\033[7;31m"+this.orientationAffichage+"\033[0m";}
+        // else                        {return "\033[4;36m"+this.orientationAffichage+"\033[0m";}
 				if (robotEnFace.getGemme() != null)
 				{
 					this.setGemme (robotEnFace.getGemme());
@@ -173,13 +199,13 @@ public class Robot extends Tuile
 
 		if ( this.getGemme() != null && tuileEnFace != null && tuileEnFace.getType() != "Gemme")
 		{
-			if ( tuileEnFace.getType() == "Tuile" ) 
+			if ( tuileEnFace.getType() == "Tuile" )
 			{
 				tuileEnFace = this.getGemme();
 				Plateau.setTuile((Gemme)(tuileEnFace), posCristX, posCristY);
 			}
 
-			if ( tuileEnFace.getType() == "Robot" ) 
+			if ( tuileEnFace.getType() == "Robot" )
 			{
 				Robot robotEnFace = (Robot)(tuileEnFace);
 
@@ -225,7 +251,7 @@ public class Robot extends Tuile
 			if (this.tabOrdre[i].getType().equals("Tourner à gauche")) { this.tourner(-1);      }
 			if (this.tabOrdre[i].getType().equals("Tourner à droite")) { this.tourner(1);       }
 			if (this.tabOrdre[i].getType().equals("Charger cristal" )) { this.prendreCristal(); }
-            if (this.tabOrdre[i].getType().equals("Deposer cristal" )) { this.deposerCristal(); }
+      if (this.tabOrdre[i].getType().equals("Deposer cristal" )) { this.deposerCristal(); }
 		}
 	}
 
@@ -234,31 +260,66 @@ public class Robot extends Tuile
 
 	public String toString()
     {
-        // if( this.couleur.equals("rouge" ))
-        // if(this.numRobot == 0)      {return "\033[0;31m"+this.orientationAffichage+"\033[0m";} //7 surligner et 4 souligner
-        // else if (this.gemme != null){return "\033[7;31m"+this.orientationAffichage+"\033[0m";}
-        // else                        {return "\033[4;31m"+this.orientationAffichage+"\033[0m";}
-        // if( this.couleur.equals("jaune" ))
-        // if(this.numRobot == 0)      {return "\033[0;33m"+this.orientationAffichage+"\033[0m";}
-        // else if (this.gemme != null){return "\033[7;33m"+this.orientationAffichage+"\033[0m";}
-        // else                        {return "\033[4;33m"+this.orientationAffichage+"\033[0m";}
-        // if( this.couleur.equals("vert"  ))
-        // if(this.numRobot == 0)      {return "\033[0;32m"+this.orientationAffichage+"\033[0m";}
-        // else if (this.gemme != null){return "\033[7;32m"+this.orientationAffichage+"\033[0m";}
-        // else                        {return "\033[4;32m"+this.orientationAffichage+"\033[0m";}
-        // if( this.couleur.equals("bleu"  ))
-        // if(this.numRobot == 0)      {return "\033[0;34m"+this.orientationAffichage+"\033[0m";}
-        // else if (this.gemme != null){return "\033[7;34m"+this.orientationAffichage+"\033[0m";}
-        // else                        {return "\033[4;34m"+this.orientationAffichage+"\033[0m";}
-        // if( this.couleur.equals("violet"))
-        // if(this.numRobot == 0)      {return "\033[0;35m"+this.orientationAffichage+"\033[0m";}
-        // else if (this.gemme != null){return "\033[7;35m"+this.orientationAffichage+"\033[0m";}
-        // else                        {return "\033[4;35m"+this.orientationAffichage+"\033[0m";}
-        // if( this.couleur.equals("cyan"  ))
-        // if(this.numRobot == 0)      {return "\033[0;36m"+this.orientationAffichage+"\033[0m";}
-        // else if (this.gemme != null){return "\033[7;31m"+this.orientationAffichage+"\033[0m";}
-        // else                        {return "\033[4;36m"+this.orientationAffichage+"\033[0m";}
+      if( this.couleur.equals("rouge" ))
+			{
+      	if(this.numRobot == 0)     //7 surligner et 4 souligner
+				{
+					if (this.gemme != null) {return "\033[7;31m"+this.orientationAffichage+"\033[0m";}
+      		else                    {return "\033[0;31m"+this.orientationAffichage+"\033[0m";}
+				}
+				else {return "\033[4;31m"+this.orientationAffichage+"\033[0m";}
+			}
 
-        return "" + this.orientationAffichage;
+			if( this.couleur.equals("jaune" ))
+			{
+				if(this.numRobot == 0)     //7 surligner et 4 souligner
+				{
+					if (this.gemme != null) {return "\033[7;33m"+this.orientationAffichage+"\033[0m";}
+					else                    {return "\033[0;33m"+this.orientationAffichage+"\033[0m";}
+				}
+				else {return "\033[4;33m"+this.orientationAffichage+"\033[0m";}
+			}
+
+			if( this.couleur.equals("vert"  ))
+			{
+				if(this.numRobot == 0)     //7 surligner et 4 souligner
+				{
+					if (this.gemme != null) {return "\033[7;32m"+this.orientationAffichage+"\033[0m";}
+					else                    {return "\033[0;32m"+this.orientationAffichage+"\033[0m";}
+				}
+				else {return "\033[4;32m"+this.orientationAffichage+"\033[0m";}
+			}
+
+      if( this.couleur.equals("bleu"  ))
+			{
+				if(this.numRobot == 0)     //7 surligner et 4 souligner
+				{
+					if (this.gemme != null) {return "\033[7;34m"+this.orientationAffichage+"\033[0m";}
+					else                    {return "\033[0;34m"+this.orientationAffichage+"\033[0m";}
+				}
+				else {return "\033[4;34m"+this.orientationAffichage+"\033[0m";}
+			}
+
+      if( this.couleur.equals("violet"))
+			{
+				if(this.numRobot == 0)     //7 surligner et 4 souligner
+				{
+					if (this.gemme != null) {return "\033[7;31m"+this.orientationAffichage+"\033[0m";}
+					else                    {return "\033[0;31m"+this.orientationAffichage+"\033[0m";}
+				}
+				else {return "\033[4;31m"+this.orientationAffichage+"\033[0m";}
+			}
+
+      if( this.couleur.equals("cyan"  ))
+			{
+				if(this.numRobot == 0)     //7 surligner et 4 souligner
+				{
+					if (this.gemme != null) {return "\033[7;36m"+this.orientationAffichage+"\033[0m";}
+					else                    {return "\033[0;36m"+this.orientationAffichage+"\033[0m";}
+				}
+				else {return "\033[4;36m"+this.orientationAffichage+"\033[0m";}
+			}
+
+    	return "" + this.orientationAffichage;
     }
 }
