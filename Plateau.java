@@ -25,6 +25,10 @@ public class Plateau
 	private  ArrayList<Robot> ensRobot;
 	private  ArrayList<Base>  ensBase;
 
+	private Gemme critalVert   = new Gemme("Gemme", 0, 0, "Vert"  );
+	private Gemme critalViolet = new Gemme("Gemme", 0, 0, "Violet");
+	public static Gemme[] tabCristal = new Gemme[8];
+
 
 	public Plateau(Controleur ctrl, int nbJoueur)
 	{
@@ -36,6 +40,16 @@ public class Plateau
 		this.initJoueur(Plateau.nbJoueur);
 		this.joueurActif = Plateau.ensJoueur[this.ctrl.premierJoueur(Plateau.ensJoueur)];
 		this.initPlateau(nbJoueur);
+		this.setPisteCristaux();
+	}
+
+	public void setPisteCristaux()
+	{
+		for(int i=0; i<tabCristal.length; i++)
+			if(i<4)
+				tabCristal[i] = this.critalVert;
+			else
+				tabCristal[i] = this.critalViolet;
 	}
 
 	public static Tuile  getTuile (int x, int y)
