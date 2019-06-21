@@ -134,8 +134,8 @@ public class Ihm
 		//Tour normal
 		else
 		{
-			this.affichertabOrdre();
 			System.out.println("Vous avez " + this.ctrl.getPlateau().getJoueurActif().getNbPoints() + " points.\n" );
+			this.affichertabOrdre();		
 			System.out.println( "\nJoueur " + Utils.couleur(couleur,"normal",couleur) + " que voulez-vous faire :\n");
 			System.out.println("[1] : Changer le programme du robot 1");
 			System.out.println("[2] : Changer le programme du robot 2");
@@ -199,16 +199,16 @@ public class Ihm
 			for (int i=0; i<6; i++)
 			System.out.println(String.format("%-23s", "[" + (i+1) + " ] - " + jActuel.getOrdre(i).getType()) +  " (" + jActuel.getOrdre(i).getNbExemplaires() + ") "); //Affiche tous les ordres
 
-			System.out.println("[10] - Annuler");
+			//System.out.println("[10] - Annuler");
 			Ihm.numOrdre = Clavier.lire_int()-1;
 
-			if(Ihm.numOrdre == 9) { this.afficherChoix(Ihm.premierTour);}
+			//if(Ihm.numOrdre == 9) { this.afficherChoix(Ihm.premierTour);}
 
 			while (!this.verifStock(jActuel, Ihm.numOrdre))
 			{
 				System.out.println("Ordre déja tous utilisés");
 				Ihm.numOrdre = Clavier.lire_int()-1;
-				if(Ihm.numOrdre == 9) { this.afficherChoix(Ihm.premierTour); break; }
+				//if(Ihm.numOrdre == 9) { this.afficherChoix(Ihm.premierTour); break; }
 			}
 			//if(Ihm.numOrdre > 7) { break; }
 
@@ -264,6 +264,7 @@ public class Ihm
 
 			case 'P' : this.afficherChoix(Ihm.premierTour);break;
 		}
+		//this.ctrl.afficherPlateau(plateau.tabTuile);
 	}
 
 	public void modifStockJoueur(Joueur jActuel, Robot robot, int choix, int positionOrdre) //A mettre dans Joueur (pour MVC)
@@ -317,7 +318,41 @@ public class Ihm
 			System.out.print(String.format("%-5s"," | "));
 		}
 		System.out.print("\n+------------------+------------------+-------------------+");
-		System.out.print(String.format("%-3s", " ")+"+------------------+------------------+-------------------+\n");
+		System.out.print(String.format("%-3s", " ")+"+------------------+------------------+-------------------+\n\n");
+
+		for (int i = 0; i< Plateau.getNbJoueur(); i++)
+			{
+				Joueur joueur = Plateau.getJoueur(i);
+
+				if(joueur != jActuel)
+				{
+					System.out.println(Utils.couleur(joueur.getCouleur(), "normal",String.format("%-11s","Robot "+ joueur.getCouleur())) + " " + joueur.getNbPoints() + " points"); this.afficherInfoJoueurs(joueur);
+				}
+				
+			}
+
+	}
+
+	public void afficherInfoJoueurs(Joueur joueur)
+	{
+
+		String ordre = "";
+
+		for (int i = 1; i < 3; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				System.out.print("| ");
+				if(joueur.getRobot(i).getOrdre(j) != null ) { ordre = joueur.getRobot(i).getOrdre(j).toString(); }
+				System.out.print(String.format("%-16s",ordre) + " ");
+				ordre = "";
+			}
+
+
+			System.out.print(String.format("%-5s"," |  "));
+		}
+
+		System.out.print("\n");
 	}
 
 	public void afficherNbAction(char nomAction, Robot robot)
