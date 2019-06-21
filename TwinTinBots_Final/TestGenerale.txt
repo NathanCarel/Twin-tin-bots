@@ -1,0 +1,30 @@
+robot deplacement :
+        - stoper par un mur/ ou par une base/
+        - pousse une seule gemme/ ou un seule robots/
+        - pousse pas plus de 2 robot/ et 2 gemme/ ou un robot une gemme/ ou un robot et une base/ ou un cristal et une base/ et sur mur/
+        - ce deplace dans la direction donner/
+        - tourne dans les bonnes directions (gauche et droite)/
+        - avance de 1 ou 2 tuile si il peut/
+
+robot prend un cristal :
+        - sur robot adverse, prend son cristal si on en n'a pas ou prend rien si le robot n'a pas de cristal/
+        - peut prendre un seule cristal/
+        - ne peut prendre des robots ou des bases/
+
+robot depose un cristal :
+        - sur base, incrementation des nbPoints et disparition du cristal avec apparition d'un cristal au milieu ou a coter avec un cristal en moin dans la piste de cristal/
+        - sur tuile, tuile devient gemme/
+        - sur robot adverse, le robot adverse prend la gemme sauf s'il en n'a deja une/
+        - sur gemme, il ne depose pas la gemme/
+        - depose en dehors de la map/
+
+tableau, liste des actions d'un robot :
+        - maximun 3 actions pour un robot
+        - 1er tour 1 action sur chaque robot puis apres 1 seule action par tour
+        - suivie des actions dans l'ordre
+        - ajouter action, et si deja carte la remplace
+        - echanger action, permute 2 actions deja dans la liste
+        - retire action, remet l'action dans la stock du joueurs
+        - Vider liste des actions
+        - Passer
+        - Annuler, fait revenir aux debut du tour du joueur
