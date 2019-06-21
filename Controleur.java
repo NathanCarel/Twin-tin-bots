@@ -40,9 +40,9 @@ public class Controleur
 		Controleur.ihm.afficherChoix(premierTour);
 	}
 
-	public void avancerScenario(String ordre)
+	public void avancerScenario(String ordre, Robot robot, Joueur[] joueurs)
 	{
-		Controleur.ihm.avancerScenario(ordre);
+		Controleur.ihm.avancerScenario(ordre, robot, joueurs);
 	}
 
 	public int premierJoueur(Joueur[] ensJoueurs)

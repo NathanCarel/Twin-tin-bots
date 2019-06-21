@@ -1,10 +1,13 @@
 /*
+
+import iut.algo.*;
+import java.util.*;
+import java.util.ArrayList;
 Projet_tut
 @author Tristan Bassa
 17/06/2019
 */
 
-import java.util.*;
 import iut.algo.*;
 
 public class Ihm
@@ -376,11 +379,22 @@ public class Ihm
 		return "";
 	}
 
-	public void avancerScenario(String ordre)
+	public void avancerScenario(String ordre, Robot robot, Joueur[] joueurs)
 	{
+		String couleur = robot.getCouleur();
+		String type    = robot.getType();
+		int    num     = robot.getNum();
+
 		System.out.println("Appuyer sur une touche pour continuer ");
 		Clavier.lireString();
-		System.out.println("Action : " + ordre + "\n");
+		System.out.println("--------------------------------------------------------");
+		if(num == 0) System.out.println(Utils.couleur(couleur,"normal",(type + " " + (num+1) + " :")) + " " + ordre + "\n");
+		else         System.out.println(Utils.couleur(couleur, "souligne",(type + " " + (num+1) + " :")) + " " + ordre + "\n");
+		for(int i = 0; i < joueurs.length; i++)
+		{
+			couleur = joueurs[i].getCouleur();
+			System.out.println("Points joueur " + Utils.couleur(couleur,"normal",couleur) + " : " + joueurs[i].getNbPoints() + "\n");
+		}
 		this.afficherPlateau(this.ctrl.getTabTuiles());
 	}
 
