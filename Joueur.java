@@ -48,4 +48,9 @@ public class Joueur
 		this.tabRobot[0].faireActions();
 		this.tabRobot[1].faireActions();
 	}
+
+	public void actionRobot(int numRobot, int ordre)
+	{
+		this.tabRobot[numRobot].faireUneAction(ordre);
+	}
 }

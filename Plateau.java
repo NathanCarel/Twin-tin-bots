@@ -94,23 +94,29 @@ public class Plateau
 	public static Joueur getJoueur(int i)                     { return Plateau.ensJoueur[i];    } //et pour avoir des informations sur les joueurs
 	public static int    getLargeurMax()		                  { return Plateau.largeurMax;      }
 	public static int    getHauteurMax()		                  { return Plateau.hauteurMax;      }
-	public static int    getNbJoueur ()                       { return Plateau.nbJoueur;        }
+	public static int    getNbJoueur ()                       { return Plateau.ensJoueur.length;}
 	public static void   setTuile (Tuile tuile, int x, int y) { Plateau.tabTuile[x][y] = tuile; }
 	public static Gemme[] getTabCristal()                     { return Plateau.tabCristal;      }
 	public static void    setPremierTour(boolean premier)     { Plateau.premierTour = premier;  }
 
+	public Tuile[][] getTabTuiles()
+	{
+		return Plateau.tabTuile;
+	}
+
 
 	public void jouer()
 	{
-		this.ctrl.afficherPlateau(Plateau.tabTuile);
 		if(Plateau.chargement)
 		{
+			this.ctrl.afficherPlateau(Plateau.tabTuile);
 			this.scanScenario();
 		}
 		else
 		{
 			while(!this.gagne())
 			{
+				this.ctrl.afficherPlateau(Plateau.tabTuile);
 				this.ctrl.afficherChoix(Plateau.premierTour);
 				this.joueurActif.actionsRobots(); //Lance les 3 actions des 2 robots
 				this.JoueurSuivant();
@@ -276,7 +282,7 @@ public class Plateau
 			this.joueurActif = Plateau.ensJoueur[0];
 
 		}
-		nbJoueur = nbJoueurScenario;
+		Plateau.nbJoueur = nbJoueurScenario;
 
 		for(int i = 0; i < Plateau.ensJoueur.length; i++)
 		{
@@ -285,11 +291,21 @@ public class Plateau
 		}
 	}
 
+	public Joueur chercherJoueur(String couleur)
+	{
+		for(Joueur joueur : Plateau.ensJoueur)
+		{
+			if (couleur.equals(joueur.getCouleur())) return joueur;
+		}
+		return null;
+	}
+
 	public void scanScenario()
 	{
 		String   ligne = "";
 		String[] composant;
-		Ordre   ordre = null;
+		Ordre    ordre = null;
+
 		try
 		{
 			Scanner sc = new Scanner(Plateau.scenario);
@@ -301,7 +317,7 @@ public class Plateau
 				{
 					for (int i = 0; i < this.ensRobot.size(); i++)
 					{
-						if(this.ensRobot.get(i).getCouleur().equals(composant[1]) && this.ensRobot.get(i).getNum() == Integer.valueOf(composant[2]))
+						if(this.ensRobot.get(i).getCouleur().equals(composant[1]) && this.ensRobot.get(i).getNum() == Integer.valueOf(composant[2])-1)
 						{
 							for(int j = 3; j < composant.length; j++)
 							{
@@ -311,13 +327,17 @@ public class Plateau
 								if (composant[j].equals("TD")) { ordre = new Ordre(enumOrdre.values()[3]); }
 								if (composant[j].equals("CC")) { ordre = new Ordre(enumOrdre.values()[4]); }
 								if (composant[j].equals("DC")) { ordre = new Ordre(enumOrdre.values()[5]); }
-								if (composant[j].equals("  ")) { ordre = new Ordre(enumOrdre.AUCUN);       }
+								if (composant[j].equals("  ")) { ordre = new Ordre(enumOrdre.values()[6]); }
+
 								this.ensRobot.get(i).setOrdre(ordre, j-3);
+								this.chercherJoueur(composant[1]).actionRobot(this.ensRobot.get(i).getNum(), j-3);
+								this.ctrl.avancerScenario(this.ensRobot.get(i).getOrdre(j-3).toString());
 							}
 						}
 					}
 				}
 			}
+			sc.close();
 		}catch (Exception e) {e.printStackTrace();}
 	}
 }

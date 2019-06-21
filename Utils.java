@@ -8,7 +8,7 @@ public abstract class Utils
                                                           {"vert","32m" }, {"bleu","34m" },
                                                           {"mauve","35m"}, {"cyan","36m" }};
 
-  private static String[][] tabType     = new String[][] {{"souligne","4;"},{"surligne","7;"},{"normal","0;"},{"souligne-surligne","74;"}};
+  private static String[][] tabType     = new String[][] {{"souligne","4;"},{"surligne","7;"},{"normal","0;"},{"souligne-surligne","7;4;"}};
 
   public static String couleur(String couleur, String type, String phrase)
   {

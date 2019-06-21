@@ -25,6 +25,11 @@ public class Controleur
 		return Controleur.plateau;
 	}
 
+	public Tuile[][] getTabTuiles()
+	{
+		return Controleur.plateau.getTabTuiles();
+	}
+
 	public void afficherPlateau(Tuile[][] tabTuiles)
 	{
 		 Controleur.ihm.afficherPlateau(tabTuiles);
@@ -33,6 +38,11 @@ public class Controleur
 	public void afficherChoix(boolean premierTour)
 	{
 		Controleur.ihm.afficherChoix(premierTour);
+	}
+
+	public void avancerScenario(String ordre)
+	{
+		Controleur.ihm.avancerScenario(ordre);
 	}
 
 	public int premierJoueur(Joueur[] ensJoueurs)

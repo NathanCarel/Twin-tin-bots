@@ -102,7 +102,7 @@ public class Ihm
 				System.out.println( "\nJoueur " + Utils.couleur(couleur,"normal",couleur) + ", quelle action voulez-vous ajouter sur le robot " + (r+1) + " ?\n");
 
 				for (int i=0; i<6; i++)
-					System.out.println(String.format("%-23s", "[" + (i+1) + " ] - " + jActuel.getOrdre(i).getType()) +  " (" + jActuel.getOrdre(i).getNbExemplaires() + ") ");
+				System.out.println(String.format("%-23s", "[" + (i+1) + " ] - " + jActuel.getOrdre(i).getType()) +  " (" + jActuel.getOrdre(i).getNbExemplaires() + ") ");
 
 				Ihm.numOrdre = Clavier.lire_int()-1;
 
@@ -135,7 +135,7 @@ public class Ihm
 		else
 		{
 			System.out.println("Vous avez " + this.ctrl.getPlateau().getJoueurActif().getNbPoints() + " points.\n" );
-			this.affichertabOrdre();		
+			this.affichertabOrdre();
 			System.out.println( "\nJoueur " + Utils.couleur(couleur,"normal",couleur) + " que voulez-vous faire :\n");
 			System.out.println("[1] : Changer le programme du robot 1");
 			System.out.println("[2] : Changer le programme du robot 2");
@@ -321,15 +321,15 @@ public class Ihm
 		System.out.print(String.format("%-3s", " ")+"+------------------+------------------+-------------------+\n\n");
 
 		for (int i = 0; i< Plateau.getNbJoueur(); i++)
-			{
-				Joueur joueur = Plateau.getJoueur(i);
+		{
+			Joueur joueur = Plateau.getJoueur(i);
 
-				if(joueur != jActuel)
-				{
-					System.out.println(Utils.couleur(joueur.getCouleur(), "normal",String.format("%-11s","Robot "+ joueur.getCouleur())) + " " + joueur.getNbPoints() + " points"); this.afficherInfoJoueurs(joueur);
-				}
-				
+			if(joueur != jActuel)
+			{
+				System.out.println(Utils.couleur(joueur.getCouleur(), "normal",String.format("%-11s","Robot "+ joueur.getCouleur())) + " " + joueur.getNbPoints() + " points"); this.afficherInfoJoueurs(joueur);
 			}
+
+		}
 
 	}
 
@@ -374,6 +374,14 @@ public class Ihm
 			case 'R' : return "Quelle action voulez-vous retirer ?"   ;
 		}
 		return "";
+	}
+
+	public void avancerScenario(String ordre)
+	{
+		System.out.println("Appuyer sur une touche pour continuer ");
+		Clavier.lireString();
+		System.out.println("Action : " + ordre + "\n");
+		this.afficherPlateau(this.ctrl.getTabTuiles());
 	}
 
 	public boolean verifStock(Joueur jActuel, int numOrdre)
@@ -478,21 +486,21 @@ public class Ihm
 		chaine += "\n ";
 
 		for (int nbC = 0; nbC<Plateau.getTabCristal().length; nbC++)
-			chaine += "+---";
+		chaine += "+---";
 
 		chaine += "+\n";
 
-        for(int l=0; l<Plateau.getTabCristal().length; l++)
-        {
-					chaine += " | ";
-					if (Plateau.getCristal(l) == null) { chaine += " ";                   }
-					else                               { chaine += Plateau.getCristal(l); }
+		for(int l=0; l<Plateau.getTabCristal().length; l++)
+		{
+			chaine += " | ";
+			if (Plateau.getCristal(l) == null) { chaine += " ";                   }
+			else                               { chaine += Plateau.getCristal(l); }
 		}
 
 		chaine += " |\n ";
 
-        for (int nbC = 0; nbC<Plateau.getTabCristal().length; nbC++)
-			chaine += "+---";
+		for (int nbC = 0; nbC<Plateau.getTabCristal().length; nbC++)
+		chaine += "+---";
 
 		chaine += "+\n";
 

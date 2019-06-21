@@ -228,10 +228,7 @@ public class Robot extends Tuile
 									nbCouches++;
 							}
 
-							System.out.println("Le centre est occup�, choisissez une case o� placer le cristal (Ctr = le centre du terrain).\n");
-							//System.out.println(" "  + -nbCouches + "/" + -nbCouches + " | "  + -nbCouches + "/0 | "  + -nbCouches + "/" + nbCouches + " "  );
-							//System.out.println("  0/"                  + -nbCouches +          " |  Ctr | "          + " 0/"            + nbCouches + " "  );
-							//System.out.println("  " +  nbCouches + "/" + -nbCouches + " |  " +  nbCouches + "/0 |  " +  nbCouches + "/" + nbCouches + " \n");
+							System.out.println("Le centre est occupé, choisissez une case où placer le cristal (Ctr = le centre du terrain).\n");
 
 							System.out.println(" -1/-1 | -1/0 | -1/1 "  );
 							System.out.println("  0/-1 |  Ctr |  0/1 "  );
@@ -267,11 +264,21 @@ public class Robot extends Tuile
 		{
 			if (this.tabOrdre[i].getType().equals("Avancer 1x"      )) { this.avancer(1);       }
 			if (this.tabOrdre[i].getType().equals("Avancer 2x"      )) { this.avancer(2);       }
-			if (this.tabOrdre[i].getType().equals("Tourner à gauche")) { this.tourner(-1);      }
-			if (this.tabOrdre[i].getType().equals("Tourner à droite")) { this.tourner(1);       }
+			if (this.tabOrdre[i].getType().equals("Tourner a gauche")) { this.tourner(-1);      }
+			if (this.tabOrdre[i].getType().equals("Tourner a droite")) { this.tourner(1);       }
 			if (this.tabOrdre[i].getType().equals("Charger cristal" )) { this.prendreCristal(); }
 			if (this.tabOrdre[i].getType().equals("Deposer cristal" )) { this.deposerCristal(); }
 		}
+	}
+
+	public void faireUneAction(int numAction)
+	{
+		if (this.tabOrdre[numAction].getType().equals("Avancer 1x"      )) { this.avancer(1);       }
+		if (this.tabOrdre[numAction].getType().equals("Avancer 2x"      )) { this.avancer(2);       }
+		if (this.tabOrdre[numAction].getType().equals("Tourner a gauche")) { this.tourner(-1);      }
+		if (this.tabOrdre[numAction].getType().equals("Tourner a droite")) { this.tourner(1);       }
+		if (this.tabOrdre[numAction].getType().equals("Charger cristal" )) { this.prendreCristal(); }
+		if (this.tabOrdre[numAction].getType().equals("Deposer cristal" )) { this.deposerCristal(); }
 	}
 
 
