@@ -1,0 +1,6 @@
+init:rouge:1:4:3:>
+init:jaune:1:5:4:>
+action:rouge:1:CC:A1:DC
+action:rouge:1:TD:DC:  
+action:rouge:1:TD:CC:  
+action:jaune:1:DC:  :  

@@ -1,0 +1,4 @@
+init:rouge:1:4:3:>
+init:jaune:1:5:4:^
+action:rouge:1:A1:  :  
+action:jaune:1:A2:A1:  
