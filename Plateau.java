@@ -1,40 +1,40 @@
-/*
-Projet_tut
-@author Tristan Bassa
-17/06/2019
-*/
-
 import java.util.*;
 import iut.algo.*;
 import java.io.*;
 import java.io.File;
 
+/*----------------------------------------------------------*/
+/*     CLASSE QUI INITIALISE ET GERE LE PLATEAU DE JEU      */
+/*----------------------------------------------------------*/
+
 public class Plateau
 {
-	private final  int       NB_POINTS_REQUIS = 11; //point requis pour 2 joueurs qui est la base de calcul de victoire
 
-	private static Tuile[][]  tabTuile;  //3 variables static pour la classe Robot
-	private static Joueur[]   ensJoueur;
-	private static int        nbJoueur;
-	private static int        largeurMax;
-	private static int        hauteurMax;
-	private static int        nbCristaux = 8;
+	//ATTRIBUTS
+
+	private final  int       NB_POINTS_REQUIS = 11; //pointS requis pour 2 joueurs qui est la base de calcul de victoire
+
+	private static int        nbJoueur                 ;
+	private static int        largeurMax               ;
+	private static int        hauteurMax               ;
+	private static int        nbCristaux  = 8          ;
+	private static boolean    premierTour = true       ;
+	private static boolean    chargement  = false      ;
+	private static File       scenario                 ;
+	private static Joueur[]   ensJoueur                ;
 	private static Gemme[]    tabCristal = new Gemme[8];
-	private static boolean    premierTour = true;
-	private static boolean    chargement = false;
-	private static File       scenario;
+	private static Tuile[][]  tabTuile                 ; 
+	
+	private  int              decompte                                         ;
+	private  Joueur           joueurActif                                      ;
+	private  Controleur       ctrl                                             ;
+	private  ArrayList<Robot> ensRobot                                         ;
+	private  ArrayList<Base>  ensBase                                          ;
+	private  Gemme            cristalVert   = new Gemme("Gemme", 0, 0, "vert" );
+	private  Gemme            cristalMauve  = new Gemme("Gemme", 0, 0, "mauve");
 
 
-
-
-	private  Controleur       ctrl;
-	private  Joueur           joueurActif;
-	private  ArrayList<Robot> ensRobot;
-	private  ArrayList<Base>  ensBase;
-
-	private Gemme cristalVert   = new Gemme("Gemme", 0, 0, "vert"  );
-	private Gemme cristalMauve  = new Gemme("Gemme", 0, 0, "mauve");
-
+	//CONSTRUCTEUR
 
 	public Plateau(Controleur ctrl, int nbJoueur)
 	{
@@ -43,21 +43,28 @@ public class Plateau
 
 		this.ensBase   = new ArrayList<Base>();
 		this.ensRobot  = new ArrayList<Robot>();
+
 		if(Plateau.nbJoueur != 0)
 		{
 			Plateau.ensJoueur = new Joueur[nbJoueur];
 			this.initJoueur(Plateau.nbJoueur);
 			this.joueurActif = Plateau.ensJoueur[this.ctrl.premierJoueur(Plateau.ensJoueur)];
 		}
+
 		this.initPlateau(nbJoueur);
 		this.initPisteCristaux();
 	}
 
+
+	//METHODES
+
+
+	//Methode qui initialise la piste des cristaux selon le nombre de joueurs
 	public void initPisteCristaux()
 	{
-		Plateau.nbCristaux = 11 - Plateau.nbJoueur;
+		Plateau.nbCristaux = 11 - Plateau.ensJoueur.length;
 
-		if (Plateau.nbJoueur == 2) { Plateau.nbCristaux = 7; }
+		if (Plateau.ensJoueur.length == 2) { Plateau.nbCristaux = 7; }
 
 		Plateau.tabCristal = new Gemme[Plateau.nbCristaux];
 
@@ -70,6 +77,7 @@ public class Plateau
 		}
 	}
 
+	//Methode qui enleve et renvoie le 1er cristal du tableau
 	public static Gemme enleverCristal()
 	{
 		Gemme gemme = tabCristal[tabCristal.length - nbCristaux];
@@ -78,33 +86,8 @@ public class Plateau
 		return gemme;
 	}
 
-	public static Gemme getCristal(int num)
-	{
-		return Plateau.tabCristal[num];
-	}
 
-	public static Tuile  getTuile (int x, int y)
-	{
-		if (x>Plateau.tabTuile.length || y>Plateau.tabTuile[0].length || x<0 || y<0)
-		return null;
-
-		return Plateau.tabTuile[x][y];
-	}
-	//M�thodes static utilis�es pour modifier le tableau
-	public static Joueur getJoueur(int i)                     { return Plateau.ensJoueur[i];    } //et pour avoir des informations sur les joueurs
-	public static int    getLargeurMax()		                  { return Plateau.largeurMax;      }
-	public static int    getHauteurMax()		                  { return Plateau.hauteurMax;      }
-	public static int    getNbJoueur ()                       { return Plateau.ensJoueur.length;}
-	public static void   setTuile (Tuile tuile, int x, int y) { Plateau.tabTuile[x][y] = tuile; }
-	public static Gemme[] getTabCristal()                     { return Plateau.tabCristal;      }
-	public static void    setPremierTour(boolean premier)     { Plateau.premierTour = premier;  }
-
-	public Tuile[][] getTabTuiles()
-	{
-		return Plateau.tabTuile;
-	}
-
-
+	//Methode qui lance le jeu
 	public void jouer()
 	{
 		if(Plateau.chargement)
@@ -114,26 +97,35 @@ public class Plateau
 		}
 		else
 		{
-			while(!this.gagne())
+			while(!this.gagne()) //Tant que personne n'a gagne ou que le timer n'est pas fini
 			{
 				this.ctrl.afficherPlateau(Plateau.tabTuile);
 				this.ctrl.afficherChoix(Plateau.premierTour);
-				this.joueurActif.actionsRobots(); //Lance les 3 actions des 2 robots
+				this.joueurActif.actionsRobots(); //Lance les 3 actions des 2 robots du joueur
 				this.JoueurSuivant();
 			}
+
+			for (int i=0; i<ensJoueur.length; i++) //Si un robot possede une gemme mais que le jeu est fini,
+			{                                      //les points de sa gemme moins 1 sont donnes a son joueur
+				for (int j=0; j<2; j++)
+					if (ensJoueur[i].getRobot(j+1).getGemme() != null)
+						ensJoueur[i].setNbPoints( ensJoueur[i].getNbPoints() + (ensJoueur[i].getRobot(j+1).getGemme().getGain()-1) );
+			}
+
+			Joueur gagnant = getJoueurActif();
+
+			for (int i=0; i<ensJoueur.length; i++) //Detecte le gagnant, les egalites ne sont pas gerees dans ce programme
+			{
+				if (ensJoueur[i].getNbPoints() > gagnant.getNbPoints())
+					gagnant = ensJoueur[i];
+			}
+
+			System.out.println( Utils.couleur(gagnant.getCouleur(), "normal" , "Le joueur " + gagnant.getCouleur() + " a gagne avec " + gagnant.getNbPoints() + " points !") );
 		}
 	}
 
-	public Joueur getJoueurActif()
-	{
-		return this.joueurActif;
-	}
 
-	public void setJoueurActif(Joueur joueur)
-	{
-		this.joueurActif = joueur;
-	}
-
+	//Modifie le joueur actif
 	public void JoueurSuivant()
 	{
 		for(int i = 0; i < Plateau.ensJoueur.length; i++)
@@ -145,8 +137,13 @@ public class Plateau
 				else                                { this.joueurActif = Plateau.ensJoueur[0];   break;}
 			}
 		}
+
+		if (tabCristal[tabCristal.length-1] == null) //Si le tableau de cristaux est vide, incremente le compte a rebours de 3 tours
+			decompte++;
 	}
 
+
+	//Renvoie true si un joueur a gagne (nombre de points) ou si le decompte de 3 tours est termine
 	public boolean gagne()
 	{
 		int nbPointRequis = NB_POINTS_REQUIS;
@@ -154,12 +151,14 @@ public class Plateau
 		{
 			for(int i = 2; i <= Plateau.nbJoueur; i++)
 			{
-				if(Plateau.nbJoueur == i && joueur.getNbPoints() == nbPointRequis-(i-2)) return true;
+				if( (Plateau.nbJoueur == i && joueur.getNbPoints() == nbPointRequis-(i-2)) || this.decompte == (3 * ensJoueur.length + 1) ) return true;
 			}
 		}
 		return false;
 	}
 
+
+	//Initialise le tableau de joueurs
 	public void initJoueur(int nbJoueur)
 	{
 		Plateau.ensJoueur = new Joueur[nbJoueur];
@@ -169,6 +168,8 @@ public class Plateau
 		}
 	}
 
+
+	//Initialise le plateau de jeu
 	public void initPlateau(int nbJoueur)
 	{
 		int largeur = 0;
@@ -196,6 +197,7 @@ public class Plateau
 		}
 		catch (Exception e) { e.printStackTrace(); }
 		Plateau.tabTuile = new Tuile[Plateau.hauteurMax][Plateau.largeurMax];
+
 
 		//CHARGEMENT NORMAL
 
@@ -242,6 +244,7 @@ public class Plateau
 			sc.close();
 		}
 		catch(Exception e) { e.printStackTrace(); }
+
 
 		//CHARGEMENT DE SCENARIO
 
@@ -291,6 +294,8 @@ public class Plateau
 		}
 	}
 
+
+	//Renvoie le joueur en fonction de sa couleur
 	public Joueur chercherJoueur(String couleur)
 	{
 		for(Joueur joueur : Plateau.ensJoueur)
@@ -300,6 +305,8 @@ public class Plateau
 		return null;
 	}
 
+
+	//Lis un fichier scenario et initialise les elements de jeu selon ce fichier
 	public void scanScenario()
 	{
 		String   ligne = "";
@@ -331,7 +338,7 @@ public class Plateau
 
 								this.ensRobot.get(i).setOrdre(ordre, j-3);
 								this.chercherJoueur(composant[1]).actionRobot(this.ensRobot.get(i).getNum(), j-3);
-								this.ctrl.avancerScenario(this.ensRobot.get(i).getOrdre(j-3).toString());
+								this.ctrl.avancerScenario(this.ensRobot.get(i).getOrdre(j-3).toString(), this.ensRobot.get(i), Plateau.ensJoueur);
 							}
 						}
 					}
@@ -340,4 +347,32 @@ public class Plateau
 			sc.close();
 		}catch (Exception e) {e.printStackTrace();}
 	}
+
+
+	//ACCESSEURS
+	
+	public static int     getLargeurMax()		      { return Plateau.largeurMax      ; }
+	public static int     getHauteurMax()		      { return Plateau.hauteurMax      ; }
+	public static int     getNbJoueur  ()             { return Plateau.ensJoueur.length; }
+	public static Gemme   getCristal   (int num)      { return Plateau.tabCristal[num] ; }
+	public static Joueur  getJoueur    (int i)        { return Plateau.ensJoueur[i]    ; }
+	public static Gemme[] getTabCristal()             { return Plateau.tabCristal      ; }
+	public static Tuile   getTuile     (int x, int y)
+	{
+		if (x>Plateau.tabTuile.length || y>Plateau.tabTuile[0].length || x<0 || y<0)
+			return null;
+
+		return Plateau.tabTuile[x][y];
+	}
+
+	public Tuile[][] getTabTuiles  () { return Plateau.tabTuile; }
+	public Joueur    getJoueurActif() { return this.joueurActif; }
+
+
+	//MODIFICATEURS
+
+	public static void  setTuile      (Tuile tuile, int x, int y) { Plateau.tabTuile[x][y] = tuile; }
+	public static void  setPremierTour(boolean premier)           { Plateau.premierTour = premier ; }
+
+	public void setJoueurActif(Joueur joueur) { this.joueurActif = joueur; }
 }
